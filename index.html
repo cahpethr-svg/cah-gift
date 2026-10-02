@@ -3,115 +3,280 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
-    body { background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
-
-    .box-container { text-align: center; cursor: pointer; user-select: none; transition: transform 0.2s; }
-    .box-container:hover { transform: scale(1.06); }
-    .gift-icon { font-size: 80px; display: inline-block; animation: bounce 1.1s infinite alternate ease-in-out; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)); }
-    .tap-hint { margin-top: 10px; background: #8b0000; color: #fff; font-size: 13px; font-weight: bold; padding: 6px 14px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(139,0,0,0.4); }
-
-    .explode { animation: explodeAnim 0.45s forwards ease-out !important; }
-    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
-    @keyframes explodeAnim {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.35) rotate(8deg); filter: brightness(1.6); }
-      100% { transform: scale(0); opacity: 0; }
+    
+    body { 
+      background: transparent; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      overflow: hidden; 
     }
 
-    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 99; }
-    .popup-card { background: #fff; border-radius: 20px; padding: 24px 18px; max-width: 320px; width: 90%; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .popup-card h2 { font-size: 18px; color: #8b0000; margin-bottom: 6px; }
-    .reward-box { background: #fff8e1; border: 1px dashed #f59e0b; padding: 10px; border-radius: 12px; margin: 12px 0; }
-    .reward-name { font-size: 15px; font-weight: bold; color: #b45309; }
-    .capture-note { font-size: 12px; color: #d32f2f; font-weight: bold; background: #ffebee; padding: 6px; border-radius: 8px; margin-bottom: 12px; }
-    .popup-card p { font-size: 13px; color: #666; margin-bottom: 14px; line-height: 1.4; }
-    .line-claim-btn { display: block; background: #06c755; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; padding: 10px 18px; border-radius: 24px; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.35); }
+    .spooky-container { 
+      text-align: center; 
+      cursor: pointer; 
+      user-select: none; 
+      position: relative;
+    }
 
-    .empty-card { background: #fff; border-radius: 20px; padding: 24px 18px; max-width: 320px; width: 90%; text-align: center; }
-    .empty-btn { background: #888; color: #fff; padding: 10px 18px; border-radius: 24px; display: block; margin-top: 15px; text-decoration: none; font-weight: bold; font-size: 14px; }
+    .mystery-icon { 
+      font-size: 85px; 
+      display: inline-block; 
+      animation: floatGhost 2.4s infinite ease-in-out; 
+      filter: drop-shadow(0 0 18px rgba(255, 117, 24, 0.75)) drop-shadow(0 0 35px rgba(138, 43, 226, 0.5)); 
+      transition: transform 0.25s ease;
+    }
+    .spooky-container:hover .mystery-icon {
+      transform: scale(1.12) rotate(-5deg);
+      filter: drop-shadow(0 0 25px rgba(255, 69, 0, 0.95)) drop-shadow(0 0 45px rgba(138, 43, 226, 0.8));
+    }
 
-    @keyframes popIn { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .spooky-hint { 
+      margin-top: 8px; 
+      background: linear-gradient(135deg, #1f0202, #3d0c0c); 
+      color: #ffaa5a; 
+      font-size: 13px; 
+      font-weight: 700; 
+      padding: 7px 18px; 
+      border-radius: 20px; 
+      display: inline-block; 
+      border: 1px solid #ff4500;
+      box-shadow: 0 4px 15px rgba(255, 69, 0, 0.35); 
+      letter-spacing: 0.5px;
+    }
+
+    .spooky-explode { 
+      animation: ghostVanish 0.5s forwards ease-out !important; 
+    }
+    @keyframes floatGhost { 
+      0% { transform: translateY(0) rotate(0deg); } 
+      50% { transform: translateY(-14px) rotate(4deg); } 
+      100% { transform: translateY(0) rotate(0deg); } 
+    }
+    @keyframes ghostVanish {
+      0% { transform: scale(1); filter: brightness(1.5); }
+      40% { transform: scale(1.4) rotate(-15deg); filter: hue-rotate(90deg) brightness(2.5); opacity: 0.9; }
+      100% { transform: scale(0); opacity: 0; filter: blur(10px); }
+    }
+
+    .popup-overlay { 
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(8, 8, 12, 0.88); 
+      backdrop-filter: blur(8px); 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 999; 
+    }
+    .popup-card { 
+      background: radial-gradient(circle at top, #26162e, #110d14 80%); 
+      border: 1.5px solid #ff7518; 
+      border-radius: 22px; 
+      padding: 26px 20px; 
+      max-width: 320px; 
+      width: 90%; 
+      text-align: center; 
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 117, 24, 0.25); 
+      animation: popIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffaa5a;
+      text-shadow: 0 0 10px rgba(255, 117, 24, 0.5);
+      margin-bottom: 6px;
+    }
+
+    .reward-box { 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1.5px dashed #a855f7; 
+      padding: 12px; 
+      border-radius: 14px; 
+      margin: 14px 0; 
+      box-shadow: inset 0 0 12px rgba(168, 85, 247, 0.2);
+    }
+    .reward-name { 
+      font-size: 16px; 
+      font-weight: 700; 
+      color: #38bdf8; 
+      text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
+
+    .capture-note { 
+      font-size: 12px; 
+      color: #fca5a5; 
+      font-weight: 600; 
+      background: rgba(220, 38, 38, 0.2); 
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 7px; 
+      border-radius: 10px; 
+      margin-bottom: 14px; 
+    }
+    .popup-card p { 
+      font-size: 13px; 
+      color: #cbd5e1; 
+      margin-bottom: 16px; 
+      line-height: 1.4; 
+    }
+
+    .line-claim-btn { 
+      display: block; 
+      background: linear-gradient(135deg, #00b900, #06c755); 
+      color: #fff; 
+      text-decoration: none; 
+      font-size: 14px; 
+      font-weight: 700; 
+      padding: 11px 18px; 
+      border-radius: 25px; 
+      box-shadow: 0 0 18px rgba(6, 199, 85, 0.45); 
+      transition: all 0.2s;
+    }
+
+    .empty-card { 
+      background: #18181b; 
+      border: 1px solid #3f3f46; 
+      border-radius: 22px; 
+      padding: 26px 20px; 
+      max-width: 320px; 
+      width: 90%; 
+      text-align: center; 
+    }
+    .empty-btn { 
+      background: #3f3f46; 
+      color: #a1a1aa; 
+      padding: 10px 18px; 
+      border-radius: 25px; 
+      display: block; 
+      margin-top: 15px; 
+      font-weight: 700; 
+      font-size: 14px; 
+    }
+
+    @keyframes popIn { 
+      0% { transform: scale(0.65); opacity: 0; } 
+      100% { transform: scale(1); opacity: 1; } 
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <div class="box-container" id="giftBox" onclick="handleBoxClick()">
-    <div class="gift-icon" id="boxIcon">🎁</div>
+  <!-- ไฟล์เสียงฮาโลวีน (เสียงหัวเราะปีศาจ/แม่มดสยองขวัญ) -->
+  <audio id="spookyAudio" preload="auto">
+    <source src="https://actions.google.com/sounds/v1/horror/evil_laugh_cackle.ogg" type="audio/ogg">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
+    <div class="mystery-icon" id="boxIcon">🎃</div>
     <br>
-    <div class="tap-hint" id="statusHint">⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)</div>
+    <div class="spooky-hint" id="statusHint">🕯️ ปลดผนึกคำสาป (สุ่ม 10 สิทธิ์)</div>
   </div>
 
   <!-- ป๊อปอัปเมื่อได้รางวัล -->
   <div class="popup-overlay" id="popupSuccess">
     <div class="popup-card">
-      <div style="font-size: 40px; margin-bottom: 4px;">🎉</div>
-      <h2>ยินดีด้วย! คุณได้รับรางวัล</h2>
+      <div style="font-size: 42px; margin-bottom: 4px;">🦇</div>
+      <div class="popup-title">ยินดีด้วย! คุณรอดชีวิต</div>
       <div class="reward-box">
-        <div class="reward-name" id="prizeDisplay">กำลังโหลด...</div>
+        <div class="reward-name" id="prizeDisplay">กำลังดึงวิญญาณ...</div>
       </div>
-      <div class="capture-note">📸 โปรดแคปหน้าจอนี้ไว้เป็นหลักฐานรับรางวัล</div>
-      <p>กดปุ่มด้านล่างเพื่อส่งข้อความยืนยันเข้าแชต LINE OA</p>
+      <div class="capture-note">📸 บันทึกหลักฐานนี้ก่อนที่มันจะเลือนหาย</div>
+      <p>แตะปุ่มด้านล่างเพื่อส่งหลักฐานยืนยันเข้า LINE OA CAH</p>
       <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
-        ส่งข้อความยืนยันรับสิทธิ์ ➔
+        ส่งข้อความยืนยันรับรางวัล ➔
       </a>
     </div>
   </div>
 
-  <!-- ป๊อปอัปเมื่อสิทธิ์เต็ม 10 คนแล้ว -->
+  <!-- ป๊อปอัปเมื่อสิทธิ์ครบ 10 คนแล้ว -->
   <div class="popup-overlay" id="popupEmpty">
     <div class="empty-card">
-      <div style="font-size: 40px; margin-bottom: 4px;">🥺</div>
-      <h2 style="color: #333; font-size: 18px; margin-bottom: 8px;">เสียใจด้วยนะ</h2>
-      <p style="font-size: 13px; color: #666;">สิทธิ์รางวัลพิเศษ 10 คนแรก มีผู้กดรับสิทธิ์ครบเต็มจำนวนเรียบร้อยแล้ว</p>
-      <div class="empty-btn">โควตาเต็มแล้ว</div>
+      <div style="font-size: 42px; margin-bottom: 4px;">💀</div>
+      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">สายเกินไปแล้ว...</h2>
+      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิตครบ 10 คนแรกคว้าของขวัญไปหมดแล้วค่ะ</p>
+      <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
 
   <script>
-    // 1. ใส่ Web App URL ที่ได้จาก Google Apps Script
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
-
-    // 2. LINE OA ID
     const lineAccountID = "707nyqrq";
 
     let isProcessing = false;
+
+    // เล่นเสียงสังเคราะห์สยองขวัญร่วมด้วย (เสียงความถี่ต่ำสั่นประสาท)
+    function playCreepyDrone() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch (e) {}
+    }
 
     async function handleBoxClick() {
       if (isProcessing) return;
       isProcessing = true;
 
+      // สั่งเล่นเสียงหัวเราะผี/ปีศาจทันทีที่นิ้วแตะ
+      const audio = document.getElementById('spookyAudio');
+      if (audio) {
+        audio.volume = 0.8;
+        audio.play().catch(e => console.log("Audio play blocked", e));
+      }
+      playCreepyDrone();
+
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังสุ่มรางวัล...";
+      hint.innerText = "กำลังปลดผนึก...";
 
       try {
         const response = await fetch(GAS_API_URL);
         const result = await response.json();
 
         if (result.status === "SUCCESS") {
-          box.classList.add('explode');
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          box.classList.add('spooky-explode');
+          
+          confetti({ 
+            particleCount: 120, 
+            spread: 80, 
+            origin: { y: 0.6 },
+            colors: ['#ff7518', '#8a2be2', '#000000', '#ffd700']
+          });
 
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดี ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
-          }, 350);
+          }, 360);
 
         } else {
-          // สิทธิ์เต็ม 10 รางวัลแล้ว
           document.getElementById('popupEmpty').style.display = 'flex';
         }
       } catch (err) {
-        alert("การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)";
+        hint.innerText = "🕯️ ปลดผนึกคำสาป (สุ่ม 10 สิทธิ์)";
       }
     }
   </script>
