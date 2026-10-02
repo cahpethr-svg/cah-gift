@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- เพิ่มฟอนต์ Nosifer (ตัวอักษรเลือดไหล) และ Prompt -->
+  <link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Prompt:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
@@ -30,9 +31,7 @@
       padding: 20px;
     }
 
-    /* =========================================
-       ของตกแต่งฮาโลวีนข้างไหผี (ฟักทอง, หัวกะโหลก, ค้างคาว)
-       ========================================= */
+    /* ของตกแต่งฮาโลวีนข้างไหผี */
     .decor-prop {
       position: absolute;
       font-size: 42px;
@@ -40,18 +39,8 @@
       filter: drop-shadow(0 0 15px rgba(255, 69, 0, 0.8));
       animation: spookyFloat 3s infinite ease-in-out alternate;
     }
-    .prop-left {
-      bottom: 25px;
-      left: -35px;
-      transform: rotate(-15deg);
-      animation-delay: 0.2s;
-    }
-    .prop-right {
-      bottom: 25px;
-      right: -35px;
-      transform: rotate(15deg);
-      animation-delay: 0.8s;
-    }
+    .prop-left { bottom: 25px; left: -35px; transform: rotate(-15deg); animation-delay: 0.2s; }
+    .prop-right { bottom: 25px; right: -35px; transform: rotate(15deg); animation-delay: 0.8s; }
 
     .decor-bat {
       position: absolute;
@@ -60,27 +49,15 @@
       filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
       animation: batHover 2s infinite ease-in-out alternate;
     }
-    .bat-left {
-      top: -5px;
-      left: -20px;
-      transform: rotate(-20deg);
-      animation-delay: 0.5s;
-    }
-    .bat-right {
-      top: 15px;
-      right: -25px;
-      transform: rotate(20deg) scaleX(-1); /* กลับด้านค้างคาว */
-      animation-delay: 1.2s;
-    }
+    .bat-left { top: -5px; left: -20px; transform: rotate(-20deg); animation-delay: 0.5s; }
+    .bat-right { top: 15px; right: -25px; transform: rotate(20deg) scaleX(-1); animation-delay: 1.2s; }
 
     @keyframes batHover {
       0% { transform: translateY(0) rotate(-15deg); }
       100% { transform: translateY(-12px) rotate(-5deg); }
     }
 
-    /* =========================================
-       ไหแม่นาค
-       ========================================= */
+    /* ไหแม่นาค */
     .pot-svg-wrap {
       width: 150px;
       height: 150px;
@@ -96,17 +73,17 @@
       filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.95)) drop-shadow(0 0 60px rgba(255, 120, 0, 0.8));
     }
 
+    /* สไตล์ตัวอักษร 27 แบบเลือดไหล (Dripping Blood) */
     .glow-text {
-      font-family: 'Prompt', sans-serif;
-      font-weight: 900;
-      font-size: 32px;
-      fill: #ffcc00;
-      filter: drop-shadow(0 0 10px #ff2a00);
-      animation: flickerLight 0.2s infinite alternate;
+      font-family: 'Nosifer', cursive;
+      font-size: 20px; /* ปรับขนาดให้พอดีไห เพราะฟอนต์นี้มีหยดเลือดยาว */
+      fill: #ff0000;
+      filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 15px #ff4500);
+      animation: flickerBlood 0.15s infinite alternate;
     }
-    @keyframes flickerLight {
-      0% { opacity: 0.85; filter: drop-shadow(0 0 6px #ff2a00); }
-      100% { opacity: 1; filter: drop-shadow(0 0 18px #ffaa00); }
+    @keyframes flickerBlood {
+      0% { opacity: 0.8; filter: drop-shadow(0 0 5px #cc0000); }
+      100% { opacity: 1; filter: drop-shadow(0 0 15px #ff2a00) drop-shadow(0 0 25px #ff0000); }
     }
 
     .spooky-hint { 
@@ -245,7 +222,7 @@
     <div class="decor-bat bat-left">🦇</div>
     <div class="decor-bat bat-right">🦇</div>
 
-    <!-- ไหแม่นาค 27 -->
+    <!-- ไหแม่นาค 27 เลือดไหล -->
     <div class="pot-svg-wrap" id="boxIcon">
       <svg viewBox="0 0 100 100" width="100%" height="100%">
         <!-- ตัวไหดินเผา -->
@@ -262,8 +239,9 @@
         <!-- อักขระยันต์จางๆ บนไห -->
         <path d="M25 55 Q30 50 35 60 Q40 55 45 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
         <path d="M75 55 Q70 50 65 60 Q60 55 55 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
-        <!-- เลข 27 อาถรรพ์ตรงกลางไห -->
-        <text x="50" y="68" class="glow-text" text-anchor="middle">27</text>
+        
+        <!-- เลข 27 อาถรรพ์ ฟอนต์เลือดไหล -->
+        <text x="50" y="66" class="glow-text" text-anchor="middle">27</text>
       </svg>
     </div>
     
@@ -302,7 +280,7 @@
 
     let isProcessing = false;
 
-    // ระบบสร้างเสียงสยองขวัญสังเคราะห์โดยตรง
+    // เสียงสยองขวัญสังเคราะห์
     function playTerrifyingHorrorSound() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -337,6 +315,32 @@
       }
     }
 
+    // ฟังก์ชันยิงพลุอลังการ (ต่อเนื่อง 3 วินาที)
+    function shootGrandConfetti() {
+      const duration = 3000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
+          colors: ['#cc0000', '#ff0000', '#000000', '#8a0303']
+        }));
+      }, 250);
+    }
+
     async function handleBoxClick() {
       if (isProcessing) return;
       isProcessing = true;
@@ -354,21 +358,18 @@
         if (result.status === "SUCCESS") {
           box.classList.add('spooky-explode');
           
-          confetti({ 
-            particleCount: 130, 
-            spread: 80, 
-            origin: { y: 0.6 },
-            colors: ['#cc0000', '#ffd700', '#000000', '#8a0303']
-          });
+          // เรียกใช้ฟังก์ชันพลุอลังการ
+          shootGrandConfetti();
 
           document.getElementById('prizeDisplay').innerText = result.prize;
 
           const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดไหได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
+          // หน่วงเวลาเปิดป๊อปอัปนิดนึง ให้ดูพลุแตกก่อน
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
-          }, 400);
+          }, 800);
 
         } else {
           document.getElementById('popupEmpty').style.display = 'flex';
