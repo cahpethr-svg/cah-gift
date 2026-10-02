@@ -9,8 +9,9 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
+    /* พื้นหลังสีดำสนิท มีไอหมอกสีแดงเข้ม */
     body { 
-      background: transparent; 
+      background: radial-gradient(circle at center, #1b0707 0%, #070709 75%, #000000 100%); 
       display: flex; 
       justify-content: center; 
       align-items: center; 
@@ -25,70 +26,85 @@
       position: relative;
     }
 
-    .mystery-icon { 
-      font-size: 85px; 
-      display: inline-block; 
-      animation: floatGhost 2.4s infinite ease-in-out; 
-      filter: drop-shadow(0 0 18px rgba(255, 117, 24, 0.75)) drop-shadow(0 0 35px rgba(138, 43, 226, 0.5)); 
-      transition: transform 0.25s ease;
+    /* รูปฟักทองปีศาจเรืองแสงและขยับสั่นเบาๆ */
+    .pumpkin-svg-wrap {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto;
+      animation: spookyFloat 2.6s infinite ease-in-out;
+      filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.75)) drop-shadow(0 0 40px rgba(180, 0, 0, 0.5));
+      transition: transform 0.2s, filter 0.2s;
     }
-    .spooky-container:hover .mystery-icon {
-      transform: scale(1.12) rotate(-5deg);
-      filter: drop-shadow(0 0 25px rgba(255, 69, 0, 0.95)) drop-shadow(0 0 45px rgba(138, 43, 226, 0.8));
+    .spooky-container:hover .pumpkin-svg-wrap {
+      transform: scale(1.1) rotate(-3deg);
+      filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.95)) drop-shadow(0 0 60px rgba(255, 120, 0, 0.8));
     }
 
+    /* ดวงตาและปากฟักทองที่ลุกเป็นไฟ */
+    .glow-carve {
+      fill: #ffcc00;
+      filter: drop-shadow(0 0 8px #ff4500);
+      animation: flickerLight 0.15s infinite alternate;
+    }
+    @keyframes flickerLight {
+      0% { opacity: 0.82; filter: drop-shadow(0 0 4px #ff3700); }
+      100% { opacity: 1; filter: drop-shadow(0 0 12px #ffae00); }
+    }
+
+    /* ป้ายหลอน */
     .spooky-hint { 
-      margin-top: 8px; 
-      background: linear-gradient(135deg, #1f0202, #3d0c0c); 
-      color: #ffaa5a; 
+      margin-top: 15px; 
+      background: #0f0202; 
+      color: #ff5252; 
       font-size: 13px; 
       font-weight: 700; 
-      padding: 7px 18px; 
-      border-radius: 20px; 
+      padding: 8px 20px; 
+      border-radius: 30px; 
       display: inline-block; 
-      border: 1px solid #ff4500;
-      box-shadow: 0 4px 15px rgba(255, 69, 0, 0.35); 
+      border: 1.5px solid #b71c1c;
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); 
       letter-spacing: 0.5px;
     }
 
+    /* จังหวะระเบิด */
     .spooky-explode { 
-      animation: ghostVanish 0.5s forwards ease-out !important; 
+      animation: demonBurst 0.55s forwards ease-out !important; 
     }
-    @keyframes floatGhost { 
-      0% { transform: translateY(0) rotate(0deg); } 
-      50% { transform: translateY(-14px) rotate(4deg); } 
-      100% { transform: translateY(0) rotate(0deg); } 
+    @keyframes spookyFloat { 
+      0%, 100% { transform: translateY(0) rotate(0deg); } 
+      50% { transform: translateY(-12px) rotate(3deg); } 
     }
-    @keyframes ghostVanish {
+    @keyframes demonBurst {
       0% { transform: scale(1); filter: brightness(1.5); }
-      40% { transform: scale(1.4) rotate(-15deg); filter: hue-rotate(90deg) brightness(2.5); opacity: 0.9; }
-      100% { transform: scale(0); opacity: 0; filter: blur(10px); }
+      35% { transform: scale(1.4) rotate(12deg); filter: brightness(3) drop-shadow(0 0 40px red); }
+      100% { transform: scale(0); opacity: 0; filter: blur(14px); }
     }
 
+    /* ป๊อปอัปผลรางวัล Dark Theme สีดำสนิท */
     .popup-overlay { 
       display: none; 
       position: fixed; 
       inset: 0; 
-      background: rgba(8, 8, 12, 0.88); 
+      background: rgba(0, 0, 0, 0.92); 
       backdrop-filter: blur(8px); 
       justify-content: center; 
       align-items: center; 
       z-index: 999; 
     }
     .popup-card { 
-      background: radial-gradient(circle at top, #26162e, #110d14 80%); 
-      border: 1.5px solid #ff7518; 
-      border-radius: 22px; 
+      background: #0f0b12; 
+      border: 1.5px solid #ff4500; 
+      border-radius: 20px; 
       padding: 26px 20px; 
       max-width: 320px; 
       width: 90%; 
       text-align: center; 
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 117, 24, 0.25); 
-      animation: popIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      box-shadow: 0 0 40px rgba(255, 69, 0, 0.35); 
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
     }
 
     .popup-title {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
       color: #ffaa5a;
       text-shadow: 0 0 10px rgba(255, 117, 24, 0.5);
@@ -97,11 +113,10 @@
 
     .reward-box { 
       background: rgba(255, 255, 255, 0.05); 
-      border: 1.5px dashed #a855f7; 
+      border: 1.5px dashed #ff4500; 
       padding: 12px; 
-      border-radius: 14px; 
+      border-radius: 12px; 
       margin: 14px 0; 
-      box-shadow: inset 0 0 12px rgba(168, 85, 247, 0.2);
     }
     .reward-name { 
       font-size: 16px; 
@@ -114,10 +129,10 @@
       font-size: 12px; 
       color: #fca5a5; 
       font-weight: 600; 
-      background: rgba(220, 38, 38, 0.2); 
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(220, 38, 38, 0.25); 
+      border: 1px solid rgba(239, 68, 68, 0.4);
       padding: 7px; 
-      border-radius: 10px; 
+      border-radius: 8px; 
       margin-bottom: 14px; 
     }
     .popup-card p { 
@@ -129,21 +144,22 @@
 
     .line-claim-btn { 
       display: block; 
-      background: linear-gradient(135deg, #00b900, #06c755); 
+      background: #06c755; 
       color: #fff; 
       text-decoration: none; 
       font-size: 14px; 
       font-weight: 700; 
       padding: 11px 18px; 
       border-radius: 25px; 
-      box-shadow: 0 0 18px rgba(6, 199, 85, 0.45); 
-      transition: all 0.2s;
+      box-shadow: 0 0 20px rgba(6, 199, 85, 0.5); 
+      transition: transform 0.2s;
     }
+    .line-claim-btn:hover { transform: scale(1.03); }
 
     .empty-card { 
-      background: #18181b; 
+      background: #141416; 
       border: 1px solid #3f3f46; 
-      border-radius: 22px; 
+      border-radius: 20px; 
       padding: 26px 20px; 
       max-width: 320px; 
       width: 90%; 
@@ -169,16 +185,33 @@
 </head>
 <body>
 
-  <!-- ไฟล์เสียงฮาโลวีน (เสียงหัวเราะปีศาจ/แม่มดสยองขวัญ) -->
-  <audio id="spookyAudio" preload="auto">
-    <source src="https://actions.google.com/sounds/v1/horror/evil_laugh_cackle.ogg" type="audio/ogg">
-    <source src="https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3" type="audio/mpeg">
-  </audio>
-
   <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
-    <div class="mystery-icon" id="boxIcon">🎃</div>
-    <br>
-    <div class="spooky-hint" id="statusHint">🕯️ ปลดผนึกคำสาป (สุ่ม 10 สิทธิ์)</div>
+    <!-- ไอคอนฟักทองปีศาจแบบ SVG น่ากลัว ตาเฉี่ยว ฟันแหลมคม -->
+    <div class="pumpkin-svg-wrap" id="boxIcon">
+      <svg viewBox="0 0 100 100" width="100%" height="100%">
+        <!-- ก้านฟักทอง -->
+        <path d="M47 18 C46 8, 55 5, 58 2 C56 7, 53 14, 52 18 Z" fill="#2d5016" />
+        <!-- ตัวผลฟักทองสีส้มอมดำเข้ม -->
+        <path d="M50 18 C28 18, 12 32, 12 55 C12 78, 28 92, 50 92 C72 92, 88 78, 88 55 C88 32, 72 18, 50 18 Z" fill="#b84503" />
+        <path d="M50 18 C36 18, 25 32, 25 55 C25 78, 36 92, 50 92 C64 92, 75 78, 75 55 C75 32, 64 18, 50 18 Z" fill="#d95407" />
+        <path d="M50 18 C43 18, 38 32, 38 55 C38 78, 43 92, 50 92 C57 92, 62 78, 62 55 C62 32, 57 18, 50 18 Z" fill="#ed6a13" />
+        
+        <!-- ดวงตาสยองขวัญทรงสามเหลี่ยมเฉี่ยว -->
+        <polygon points="26,45 39,49 32,37" class="glow-carve" />
+        <polygon points="74,45 61,49 68,37" class="glow-carve" />
+        <!-- จมูกสามเหลี่ยม -->
+        <polygon points="50,50 45,58 55,58" class="glow-carve" />
+        <!-- ปากยิ้มสยองพร้อมฟันแหลมคม -->
+        <path d="M24 65 Q50 86 76 65 Q66 76 50 76 Q34 76 24 65 Z" class="glow-carve" />
+        <polygon points="33,67 36,73 39,68" fill="#1b0707" />
+        <polygon points="45,69 48,76 52,70" fill="#1b0707" />
+        <polygon points="59,69 62,75 65,68" fill="#1b0707" />
+        <polygon points="40,75 43,69 47,75" fill="#1b0707" />
+        <polygon points="53,75 56,69 60,75" fill="#1b0707" />
+      </svg>
+    </div>
+    
+    <div class="spooky-hint" id="statusHint">🩸 แตะปลดปล่อยคำสาป (10 สิทธิ์)</div>
   </div>
 
   <!-- ป๊อปอัปเมื่อได้รางวัล -->
@@ -189,7 +222,7 @@
       <div class="reward-box">
         <div class="reward-name" id="prizeDisplay">กำลังดึงวิญญาณ...</div>
       </div>
-      <div class="capture-note">📸 บันทึกหลักฐานนี้ก่อนที่มันจะเลือนหาย</div>
+      <div class="capture-note">📸 แคปหน้าจอนี้ไว้ก่อนหลักฐานจะหายไป</div>
       <p>แตะปุ่มด้านล่างเพื่อส่งหลักฐานยืนยันเข้า LINE OA CAH</p>
       <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
         ส่งข้อความยืนยันรับรางวัล ➔
@@ -202,7 +235,7 @@
     <div class="empty-card">
       <div style="font-size: 42px; margin-bottom: 4px;">💀</div>
       <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">สายเกินไปแล้ว...</h2>
-      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิตครบ 10 คนแรกคว้าของขวัญไปหมดแล้วค่ะ</p>
+      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกคว้าของรางวัลไปหมดแล้วค่ะ</p>
       <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
@@ -213,39 +246,68 @@
 
     let isProcessing = false;
 
-    // เล่นเสียงสังเคราะห์สยองขวัญร่วมด้วย (เสียงความถี่ต่ำสั่นประสาท)
-    function playCreepyDrone() {
+    // ระบบสร้างเสียงสยองขวัญสังเคราะห์โดยตรง (ดังแน่นอน ไม่โดนเบราว์เซอร์บล็อก)
+    function playTerrifyingHorrorSound() {
       try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 1.2);
-      } catch (e) {}
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+
+        // 1. เสียงเบสความถี่ต่ำคำรามกระแทกหู (Low Demon Rumble)
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = 'sawtooth';
+        subOsc.frequency.setValueAtTime(110, ctx.currentTime);
+        subOsc.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 1.2);
+        subGain.gain.setValueAtTime(0.7, ctx.currentTime);
+        subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
+        subOsc.connect(subGain);
+        subGain.connect(ctx.destination);
+        subOsc.start();
+        subOsc.stop(ctx.currentTime + 1.2);
+
+        // 2. เสียงหวีดแหลมสยองขวัญบาดแก้วหู (High Spooky Screech)
+        const screechOsc = ctx.createOscillator();
+        const screechGain = ctx.createGain();
+        screechOsc.type = 'triangle';
+        screechOsc.frequency.setValueAtTime(850, ctx.currentTime);
+        screechOsc.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 0.3);
+        screechOsc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 1.1);
+        screechGain.gain.setValueAtTime(0.4, ctx.currentTime);
+        screechGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.1);
+        screechOsc.connect(screechGain);
+        screechGain.connect(ctx.destination);
+        screechOsc.start();
+        screechOsc.stop(ctx.currentTime + 1.1);
+
+        // 3. เสียงสั่นระรัวแบบเสียงหัวเราะปีศาจ (Staccato Tremolo Laugh)
+        for (let i = 0; i < 5; i++) {
+          const laughOsc = ctx.createOscillator();
+          const laughGain = ctx.createGain();
+          const startTime = ctx.currentTime + 0.15 + (i * 0.14);
+          laughOsc.type = 'square';
+          laughOsc.frequency.setValueAtTime(320 - (i * 25), startTime);
+          laughGain.gain.setValueAtTime(0.25, startTime);
+          laughGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.11);
+          laughOsc.connect(laughGain);
+          laughGain.connect(ctx.destination);
+          laughOsc.start(startTime);
+          laughOsc.stop(startTime + 0.11);
+        }
+      } catch (err) {
+        console.error("Audio synth error", err);
+      }
     }
 
     async function handleBoxClick() {
       if (isProcessing) return;
       isProcessing = true;
 
-      // สั่งเล่นเสียงหัวเราะผี/ปีศาจทันทีที่นิ้วแตะ
-      const audio = document.getElementById('spookyAudio');
-      if (audio) {
-        audio.volume = 0.8;
-        audio.play().catch(e => console.log("Audio play blocked", e));
-      }
-      playCreepyDrone();
+      // ส่งเสียงสยองขวัญทันทีที่นิ้วสัมผัส
+      playTerrifyingHorrorSound();
 
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังปลดผนึก...";
+      hint.innerText = "กำลังปลดผนึกวิญญาณ...";
 
       try {
         const response = await fetch(GAS_API_URL);
@@ -255,10 +317,10 @@
           box.classList.add('spooky-explode');
           
           confetti({ 
-            particleCount: 120, 
+            particleCount: 130, 
             spread: 80, 
             origin: { y: 0.6 },
-            colors: ['#ff7518', '#8a2be2', '#000000', '#ffd700']
+            colors: ['#ff3300', '#7b1fa2', '#000000', '#ffaa00']
           });
 
           document.getElementById('prizeDisplay').innerText = result.prize;
@@ -268,7 +330,7 @@
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
-          }, 360);
+          }, 400);
 
         } else {
           document.getElementById('popupEmpty').style.display = 'flex';
@@ -276,7 +338,7 @@
       } catch (err) {
         alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "🕯️ ปลดผนึกคำสาป (สุ่ม 10 สิทธิ์)";
+        hint.innerText = "🩸 แตะปลดปล่อยคำสาป (10 สิทธิ์)";
       }
     }
   </script>
