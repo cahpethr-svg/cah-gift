@@ -273,12 +273,28 @@
       <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
-
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
     const lineAccountID = "707nyqrq";
-
     let isProcessing = false;
+
+    // ฟังก์ชันเช็กประวัติการเล่น (ทำแบบปลอดภัย ป้องกันกรณีมือถือบล็อกระบบจดจำ)
+    function hasPlayed() {
+      try { return localStorage.getItem("cahOutingPlayed") === "true"; } 
+      catch (e) { return false; }
+    }
+    function setPlayedFlag() {
+      try { localStorage.setItem("cahOutingPlayed", "true"); } 
+      catch (e) { console.warn("Local storage blocked"); }
+    }
+
+    // ตรวจสอบตั้งแต่ตอนโหลดหน้าเว็บ
+    window.onload = function() {
+      if (hasPlayed()) {
+        document.getElementById('statusHint').innerText = "🚫 สิทธิ์ของเครื่องนี้ถูกใช้ไปแล้ว";
+        document.getElementById('boxIcon').style.filter = "grayscale(100%) opacity(0.5)";
+      }
+    };
 
     // เสียงสยองขวัญสังเคราะห์
     function playTerrifyingHorrorSound() {
@@ -315,7 +331,7 @@
       }
     }
 
-    // ฟังก์ชันยิงพลุอลังการ (ต่อเนื่อง 3 วินาที)
+    // ฟังก์ชันยิงพลุอลังการ (ต่อเนื่อง 10 วินาที)
     function shootGrandConfetti() {
       const duration = 3000;
       const animationEnd = Date.now() + duration;
@@ -327,10 +343,7 @@
 
       const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
+        if (timeLeft <= 0) return clearInterval(interval);
 
         const particleCount = 50 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, {
@@ -342,6 +355,12 @@
     }
 
     async function handleBoxClick() {
+      // ดักจับคนเนียน: ถ้าระบบจำได้ว่าเคยเล่นแล้ว ให้หยุดทำงานทันที
+      if (hasPlayed()) {
+        alert("คุณได้ใช้สิทธิ์สุ่มรางวัลของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)");
+        return;
+      }
+
       if (isProcessing) return;
       isProcessing = true;
 
@@ -349,7 +368,7 @@
 
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังเปิดไหอาถรรพ์...";
+      hint.innerText = "กำลังปลดผนึกอาถรรพ์...";
 
       try {
         const response = await fetch(GAS_API_URL);
@@ -358,15 +377,15 @@
         if (result.status === "SUCCESS") {
           box.classList.add('spooky-explode');
           
-          // เรียกใช้ฟังก์ชันพลุอลังการ
+          // บันทึกลงเครื่องทันทีว่าคนนี้รับรางวัลไปแล้ว
+          setPlayedFlag();
+          
           shootGrandConfetti();
-
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดไหได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
-          // หน่วงเวลาเปิดป๊อปอัปนิดนึง ให้ดูพลุแตกก่อน
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
           }, 800);
@@ -377,10 +396,9 @@
       } catch (err) {
         alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)";
+        hint.innerText = "🩸 จิ้มเพื่อปลดผนึก (สุ่ม 10 สิทธิ์)";
       }
     }
   </script>
 
-</body>
-</html>
+  
