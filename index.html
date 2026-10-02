@@ -9,9 +9,9 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
-    /* พื้นหลังสีดำสนิท มีแสงหมอกสีส้มเลือดส่องขึ้นมาจากด้านล่าง */
+    /* พื้นหลังสีดำสนิท แสงหมอกสีส้มเลือด */
     body { 
-      background: radial-gradient(circle at 50% 60%, #300c0c 0%, #110505 50%, #000000 100%); 
+      background: radial-gradient(circle at 50% 60%, #290808 0%, #0d0303 50%, #000000 100%); 
       display: flex; 
       justify-content: center; 
       align-items: center; 
@@ -20,76 +20,67 @@
       position: relative;
     }
 
-    /* =========================================
-       ฉากหลัง: ต้นไม้ผีสิง & ฝูงค้างคาว
-       ========================================= */
-    .scenery-layer {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* ต้นไม้ปีศาจฝั่งซ้าย (มีแสงเรืองสีส้มตัดขอบชัดเจน) */
-    .tree-left {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 320px;
-      max-width: 45vw;
-      height: auto;
-      filter: drop-shadow(0 0 12px rgba(255, 69, 0, 0.45));
-    }
-
-    /* ฝูงค้างคาวบินวนเวียนรอบไห */
-    .bat-group {
-      position: absolute;
-      inset: 0;
-    }
-    .bat {
-      position: absolute;
-      fill: #1a0808;
-      stroke: #ff5252;
-      stroke-width: 0.8;
-      filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.6));
-    }
-    .bat svg {
-      width: 100%; height: 100%;
-      animation: batFlap 0.28s infinite alternate ease-in-out;
-    }
-    @keyframes batFlap {
-      0% { transform: scaleY(1); }
-      100% { transform: scaleY(0.35); }
-    }
-
-    .b1 { width: 45px; height: 25px; top: 22%; left: 18%; animation: floatBat1 4s infinite ease-in-out; }
-    .b2 { width: 32px; height: 18px; top: 18%; left: 62%; animation: floatBat2 5s infinite ease-in-out; }
-    .b3 { width: 55px; height: 30px; top: 32%; left: 74%; animation: floatBat1 4.5s infinite ease-in-out 1s; }
-    .b4 { width: 25px; height: 15px; top: 12%; left: 45%; animation: floatBat2 3.8s infinite ease-in-out 0.5s; }
-    .b5 { width: 38px; height: 20px; top: 40%; left: 22%; animation: floatBat1 5.2s infinite ease-in-out 1.5s; }
-
-    @keyframes floatBat1 {
-      0%, 100% { transform: translateY(0) rotate(-6deg); }
-      50% { transform: translateY(-15px) translateX(10px) rotate(8deg); }
-    }
-    @keyframes floatBat2 {
-      0%, 100% { transform: translateY(0) rotate(8deg); }
-      50% { transform: translateY(-12px) translateX(-12px) rotate(-6deg); }
-    }
-
-    /* =========================================
-       ส่วนหลัก: ไหแม่นาค
-       ========================================= */
+    /* คอนเทนเนอร์หลัก */
     .spooky-container { 
       text-align: center; 
       cursor: pointer; 
       user-select: none; 
       position: relative;
       z-index: 10;
+      padding: 20px;
     }
 
+    /* =========================================
+       ของตกแต่งฮาโลวีนข้างไหผี (ฟักทอง, หัวกะโหลก, ค้างคาว)
+       ========================================= */
+    .decor-prop {
+      position: absolute;
+      font-size: 42px;
+      pointer-events: none;
+      filter: drop-shadow(0 0 15px rgba(255, 69, 0, 0.8));
+      animation: spookyFloat 3s infinite ease-in-out alternate;
+    }
+    .prop-left {
+      bottom: 25px;
+      left: -35px;
+      transform: rotate(-15deg);
+      animation-delay: 0.2s;
+    }
+    .prop-right {
+      bottom: 25px;
+      right: -35px;
+      transform: rotate(15deg);
+      animation-delay: 0.8s;
+    }
+
+    .decor-bat {
+      position: absolute;
+      font-size: 28px;
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+      animation: batHover 2s infinite ease-in-out alternate;
+    }
+    .bat-left {
+      top: -5px;
+      left: -20px;
+      transform: rotate(-20deg);
+      animation-delay: 0.5s;
+    }
+    .bat-right {
+      top: 15px;
+      right: -25px;
+      transform: rotate(20deg) scaleX(-1); /* กลับด้านค้างคาว */
+      animation-delay: 1.2s;
+    }
+
+    @keyframes batHover {
+      0% { transform: translateY(0) rotate(-15deg); }
+      100% { transform: translateY(-12px) rotate(-5deg); }
+    }
+
+    /* =========================================
+       ไหแม่นาค
+       ========================================= */
     .pot-svg-wrap {
       width: 150px;
       height: 150px;
@@ -97,6 +88,8 @@
       animation: spookyFloat 2.6s infinite ease-in-out;
       filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.7)) drop-shadow(0 0 45px rgba(255, 80, 0, 0.5));
       transition: transform 0.2s, filter 0.2s;
+      position: relative;
+      z-index: 5;
     }
     .spooky-container:hover .pot-svg-wrap {
       transform: scale(1.1) rotate(-3deg);
@@ -128,6 +121,8 @@
       border: 1.5px solid #b71c1c;
       box-shadow: 0 0 18px rgba(220, 38, 38, 0.5); 
       letter-spacing: 0.5px;
+      position: relative;
+      z-index: 5;
     }
 
     .spooky-explode { 
@@ -143,7 +138,7 @@
       100% { transform: scale(0); opacity: 0; filter: blur(14px); }
     }
 
-    /* ป๊อปอัป */
+    /* ป๊อปอัปผลรางวัล */
     .popup-overlay { 
       display: none; 
       position: fixed; 
@@ -241,27 +236,16 @@
 </head>
 <body>
 
-  <!-- เลเยอร์ต้นไม้และค้างคาว -->
-  <div class="scenery-layer">
-    <!-- ต้นไม้ปีศาจฝั่งซ้ายพร้อมแสงสะท้อนขอบกิ่งไม้ -->
-    <svg class="tree-left" viewBox="0 0 280 400">
-      <path d="M0,400 L80,400 C60,330 75,270 55,210 C40,160 50,110 95,60 C125,25 180,15 220,10 C180,20 145,40 120,75 C95,110 90,140 85,170 C110,160 145,155 175,170 C140,175 115,185 100,205 C135,210 170,225 195,250 C155,240 125,240 105,255 C115,305 125,355 175,400 Z" fill="#0d0404" stroke="#ff4500" stroke-width="1.8" />
-      <path d="M70,120 C95,95 145,85 180,95 C150,105 120,115 100,145 Z" fill="#0d0404" stroke="#ff4500" stroke-width="1.5" />
-      <path d="M90,190 C120,170 170,175 205,200 C170,195 135,205 115,230 Z" fill="#0d0404" stroke="#ff4500" stroke-width="1.5" />
-    </svg>
-
-    <!-- ฝูงค้างคาว 5 ตัว บินกระพือปีก -->
-    <div class="bat-group">
-      <div class="bat b1"><svg viewBox="0 0 100 50"><path d="M50,25 C45,15 35,5 20,5 C30,15 30,30 20,40 C10,30 5,20 0,15 C5,25 15,40 50,50 C85,40 95,25 100,15 C95,20 90,30 80,40 C70,30 70,15 80,5 C65,5 55,15 50,25 Z" /></svg></div>
-      <div class="bat b2"><svg viewBox="0 0 100 50"><path d="M50,25 C45,15 35,5 20,5 C30,15 30,30 20,40 C10,30 5,20 0,15 C5,25 15,40 50,50 C85,40 95,25 100,15 C95,20 90,30 80,40 C70,30 70,15 80,5 C65,5 55,15 50,25 Z" /></svg></div>
-      <div class="bat b3"><svg viewBox="0 0 100 50"><path d="M50,25 C45,15 35,5 20,5 C30,15 30,30 20,40 C10,30 5,20 0,15 C5,25 15,40 50,50 C85,40 95,25 100,15 C95,20 90,30 80,40 C70,30 70,15 80,5 C65,5 55,15 50,25 Z" /></svg></div>
-      <div class="bat b4"><svg viewBox="0 0 100 50"><path d="M50,25 C45,15 35,5 20,5 C30,15 30,30 20,40 C10,30 5,20 0,15 C5,25 15,40 50,50 C85,40 95,25 100,15 C95,20 90,30 80,40 C70,30 70,15 80,5 C65,5 55,15 50,25 Z" /></svg></div>
-      <div class="bat b5"><svg viewBox="0 0 100 50"><path d="M50,25 C45,15 35,5 20,5 C30,15 30,30 20,40 C10,30 5,20 0,15 C5,25 15,40 50,50 C85,40 95,25 100,15 C95,20 90,30 80,40 C70,30 70,15 80,5 C65,5 55,15 50,25 Z" /></svg></div>
-    </div>
-  </div>
-
-  <!-- ไหแม่นาค -->
+  <!-- คอนเทนเนอร์หลัก ไหแม่นาค + ของตกแต่ง -->
   <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
+    
+    <!-- ของตกแต่งฮาโลวีนด้านข้าง -->
+    <div class="decor-prop prop-left">🎃</div>
+    <div class="decor-prop prop-right">💀</div>
+    <div class="decor-bat bat-left">🦇</div>
+    <div class="decor-bat bat-right">🦇</div>
+
+    <!-- ไหแม่นาค 27 -->
     <div class="pot-svg-wrap" id="boxIcon">
       <svg viewBox="0 0 100 100" width="100%" height="100%">
         <!-- ตัวไหดินเผา -->
@@ -282,6 +266,7 @@
         <text x="50" y="68" class="glow-text" text-anchor="middle">27</text>
       </svg>
     </div>
+    
     <div class="spooky-hint" id="statusHint">🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)</div>
   </div>
 
@@ -317,6 +302,7 @@
 
     let isProcessing = false;
 
+    // ระบบสร้างเสียงสยองขวัญสังเคราะห์โดยตรง
     function playTerrifyingHorrorSound() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
