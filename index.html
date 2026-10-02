@@ -75,7 +75,7 @@
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
 
     // 2. LINE OA ID
-    const lineAccountID = "@707nyqrq";
+    const lineAccountID = "707nyqrq";
 
     let isProcessing = false;
 
@@ -98,7 +98,7 @@
           document.getElementById('prizeDisplay').innerText = result.prize;
 
           const msg = encodeURIComponent(`สวัสดี ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
-          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/${lineAccountID}/?${msg}`;
+          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
