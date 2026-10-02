@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
+    body { background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+    .box-container { text-align: center; cursor: pointer; user-select: none; transition: transform 0.2s; }
+    .box-container:hover { transform: scale(1.06); }
+    .gift-icon { font-size: 80px; display: inline-block; animation: bounce 1.1s infinite alternate ease-in-out; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3)); }
+    .tap-hint { margin-top: 10px; background: #8b0000; color: #fff; font-size: 13px; font-weight: bold; padding: 6px 14px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(139,0,0,0.4); }
+
+    .explode { animation: explodeAnim 0.45s forwards ease-out !important; }
+    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+    @keyframes explodeAnim {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.35) rotate(8deg); filter: brightness(1.6); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 99; }
+    .popup-card { background: #fff; border-radius: 20px; padding: 24px 18px; max-width: 320px; width: 90%; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .popup-card h2 { font-size: 18px; color: #8b0000; margin-bottom: 6px; }
+    .reward-box { background: #fff8e1; border: 1px dashed #f59e0b; padding: 10px; border-radius: 12px; margin: 12px 0; }
+    .reward-name { font-size: 15px; font-weight: bold; color: #b45309; }
+    .capture-note { font-size: 12px; color: #d32f2f; font-weight: bold; background: #ffebee; padding: 6px; border-radius: 8px; margin-bottom: 12px; }
+    .popup-card p { font-size: 13px; color: #666; margin-bottom: 14px; line-height: 1.4; }
+    .line-claim-btn { display: block; background: #06c755; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; padding: 10px 18px; border-radius: 24px; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.35); }
+
+    @keyframes popIn { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <div class="box-container" id="giftBox" onclick="handleBoxClick()">
+    <div class="gift-icon" id="boxIcon">🎁</div>
+    <br>
+    <div class="tap-hint">⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)</div>
+  </div>
+
+  <div class="popup-overlay" id="popupSuccess">
+    <div class="popup-card">
+      <div style="font-size: 40px; margin-bottom: 4px;">🎉</div>
+      <h2>ยินดีด้วย! คุณได้รับรางวัล</h2>
+      
+      <div class="reward-box">
+        <div class="reward-name" id="prizeDisplay">กำลังสุ่ม...</div>
+      </div>
+      
+      <div class="capture-note">📸 โปรดแคปหน้าจอนี้ไว้เป็นหลักฐานรับรางวัล</div>
+      <p>กดปุ่มด้านล่างเพื่อส่งข้อความยืนยันเข้าแชต LINE OA</p>
+      
+      <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
+        ส่งข้อความยืนยันรับสิทธิ์ ➔
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const prizeList = [
+      "🏆 ส่วนลดพิเศษ 500 บาท",
+      "☕ สิทธิ์เครื่องดื่มฟรี 1 แก้ว",
+      "🎁 ของที่ระลึก Outing 2026",
+      "✨ บัตรกำนัลพิเศษประจำทริป"
+    ];
+
+    // Basic ID บัญชี LINE OA ของคุณ
+    const lineAccountID = "@787nqarq";
+
+    let hasClicked = false;
+
+    function handleBoxClick() {
+      if (hasClicked) return;
+      hasClicked = true;
+
+      const box = document.getElementById('boxIcon');
+      box.classList.add('explode');
+
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+      const chosenPrize = prizeList[Math.floor(Math.random() * prizeList.length)];
+      document.getElementById('prizeDisplay').innerText = chosenPrize;
+
+      // สร้างลิงก์ส่งข้อความเข้าแชต LINE พร้อมระบุเวลาเพื่อใช้นับ 10 คนแรกตามเวลาส่ง
+      const currentTime = new Date().toLocaleTimeString('th-TH');
+      const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${chosenPrize}" (เวลา ${currentTime}) ขอรับสิทธิ์ 1 ใน 10 คนแรกค่ะ/ครับ`);
+      document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/${lineAccountID}/?${msg}`;
+
+      setTimeout(() => {
+        document.getElementById('popupSuccess').style.display = 'flex';
+      }, 380);
+    }
+  </script>
+
+</body>
+</html>
