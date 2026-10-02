@@ -29,6 +29,9 @@
     .popup-card p { font-size: 13px; color: #666; margin-bottom: 14px; line-height: 1.4; }
     .line-claim-btn { display: block; background: #06c755; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; padding: 10px 18px; border-radius: 24px; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.35); }
 
+    .empty-card { background: #fff; border-radius: 20px; padding: 24px 18px; max-width: 320px; width: 90%; text-align: center; }
+    .empty-btn { background: #888; color: #fff; padding: 10px 18px; border-radius: 24px; display: block; margin-top: 15px; text-decoration: none; font-weight: bold; font-size: 14px; }
+
     @keyframes popIn { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -38,60 +41,78 @@
   <div class="box-container" id="giftBox" onclick="handleBoxClick()">
     <div class="gift-icon" id="boxIcon">🎁</div>
     <br>
-    <div class="tap-hint">⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)</div>
+    <div class="tap-hint" id="statusHint">⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)</div>
   </div>
 
+  <!-- ป๊อปอัปเมื่อได้รางวัล -->
   <div class="popup-overlay" id="popupSuccess">
     <div class="popup-card">
       <div style="font-size: 40px; margin-bottom: 4px;">🎉</div>
       <h2>ยินดีด้วย! คุณได้รับรางวัล</h2>
-      
       <div class="reward-box">
-        <div class="reward-name" id="prizeDisplay">กำลังสุ่ม...</div>
+        <div class="reward-name" id="prizeDisplay">กำลังโหลด...</div>
       </div>
-      
       <div class="capture-note">📸 โปรดแคปหน้าจอนี้ไว้เป็นหลักฐานรับรางวัล</div>
       <p>กดปุ่มด้านล่างเพื่อส่งข้อความยืนยันเข้าแชต LINE OA</p>
-      
       <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
         ส่งข้อความยืนยันรับสิทธิ์ ➔
       </a>
     </div>
   </div>
 
+  <!-- ป๊อปอัปเมื่อสิทธิ์เต็ม 10 คนแล้ว -->
+  <div class="popup-overlay" id="popupEmpty">
+    <div class="empty-card">
+      <div style="font-size: 40px; margin-bottom: 4px;">🥺</div>
+      <h2 style="color: #333; font-size: 18px; margin-bottom: 8px;">เสียใจด้วยนะ</h2>
+      <p style="font-size: 13px; color: #666;">สิทธิ์รางวัลพิเศษ 10 คนแรก มีผู้กดรับสิทธิ์ครบเต็มจำนวนเรียบร้อยแล้ว</p>
+      <div class="empty-btn">โควตาเต็มแล้ว</div>
+    </div>
+  </div>
+
   <script>
-    const prizeList = [
-      "🏆 ส่วนลดพิเศษ 500 บาท",
-      "☕ สิทธิ์เครื่องดื่มฟรี 1 แก้ว",
-      "🎁 ของที่ระลึก Outing 2026",
-      "✨ บัตรกำนัลพิเศษประจำทริป"
-    ];
+    // 1. ใส่ Web App URL ที่ได้จาก Google Apps Script
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
 
-    // Basic ID บัญชี LINE OA ของคุณ
-    const lineAccountID = "@787nqarq";
+    // 2. LINE OA ID
+    const lineAccountID = "@707nyqrq";
 
-    let hasClicked = false;
+    let isProcessing = false;
 
-    function handleBoxClick() {
-      if (hasClicked) return;
-      hasClicked = true;
+    async function handleBoxClick() {
+      if (isProcessing) return;
+      isProcessing = true;
 
       const box = document.getElementById('boxIcon');
-      box.classList.add('explode');
+      const hint = document.getElementById('statusHint');
+      hint.innerText = "กำลังสุ่มรางวัล...";
 
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      try {
+        const response = await fetch(GAS_API_URL);
+        const result = await response.json();
 
-      const chosenPrize = prizeList[Math.floor(Math.random() * prizeList.length)];
-      document.getElementById('prizeDisplay').innerText = chosenPrize;
+        if (result.status === "SUCCESS") {
+          box.classList.add('explode');
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
-      // สร้างลิงก์ส่งข้อความเข้าแชต LINE พร้อมระบุเวลาเพื่อใช้นับ 10 คนแรกตามเวลาส่ง
-      const currentTime = new Date().toLocaleTimeString('th-TH');
-      const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${chosenPrize}" (เวลา ${currentTime}) ขอรับสิทธิ์ 1 ใน 10 คนแรกค่ะ/ครับ`);
-      document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/${lineAccountID}/?${msg}`;
+          document.getElementById('prizeDisplay').innerText = result.prize;
 
-      setTimeout(() => {
-        document.getElementById('popupSuccess').style.display = 'flex';
-      }, 380);
+          const msg = encodeURIComponent(`สวัสดี ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
+          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/${lineAccountID}/?${msg}`;
+
+          setTimeout(() => {
+            document.getElementById('popupSuccess').style.display = 'flex';
+          }, 350);
+
+        } else {
+          // สิทธิ์เต็ม 10 รางวัลแล้ว
+          document.getElementById('popupEmpty').style.display = 'flex';
+        }
+      } catch (err) {
+        alert("การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง");
+        isProcessing = false;
+        hint.innerText = "⚡ สุ่มรับรางวัล (จำกัด 10 สิทธิ์แรก)";
+      }
     }
   </script>
 
