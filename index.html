@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
-    /* พื้นหลังสีดำสนิท มีไอหมอกสีแดงเข้ม */
+    /* พื้นหลังสีดำสนิท มีไอหมอกสีแดงเข้มสไตล์อาถรรพ์ */
     body { 
       background: radial-gradient(circle at center, #1b0707 0%, #070709 75%, #000000 100%); 
       display: flex; 
@@ -26,29 +26,32 @@
       position: relative;
     }
 
-    /* รูปฟักทองปีศาจเรืองแสงและขยับสั่นเบาๆ */
-    .pumpkin-svg-wrap {
+    /* รูปไหแม่นาค เรืองแสงและขยับสั่นเบาๆ */
+    .pot-svg-wrap {
       width: 140px;
       height: 140px;
       margin: 0 auto;
       animation: spookyFloat 2.6s infinite ease-in-out;
-      filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.75)) drop-shadow(0 0 40px rgba(180, 0, 0, 0.5));
+      filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5)) drop-shadow(0 0 35px rgba(138, 0, 0, 0.4));
       transition: transform 0.2s, filter 0.2s;
     }
-    .spooky-container:hover .pumpkin-svg-wrap {
+    .spooky-container:hover .pot-svg-wrap {
       transform: scale(1.1) rotate(-3deg);
-      filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.95)) drop-shadow(0 0 60px rgba(255, 120, 0, 0.8));
+      filter: drop-shadow(0 0 25px rgba(255, 30, 0, 0.8)) drop-shadow(0 0 50px rgba(255, 0, 0, 0.6));
     }
 
-    /* ดวงตาและปากฟักทองที่ลุกเป็นไฟ */
-    .glow-carve {
+    /* ตัวเลข 27 เรืองแสงบนไห */
+    .glow-text {
+      font-family: 'Prompt', sans-serif;
+      font-weight: 900;
+      font-size: 32px;
       fill: #ffcc00;
-      filter: drop-shadow(0 0 8px #ff4500);
-      animation: flickerLight 0.15s infinite alternate;
+      filter: drop-shadow(0 0 8px #ff2a00);
+      animation: flickerLight 0.2s infinite alternate;
     }
     @keyframes flickerLight {
-      0% { opacity: 0.82; filter: drop-shadow(0 0 4px #ff3700); }
-      100% { opacity: 1; filter: drop-shadow(0 0 12px #ffae00); }
+      0% { opacity: 0.85; filter: drop-shadow(0 0 5px #ff2a00); }
+      100% { opacity: 1; filter: drop-shadow(0 0 15px #ff8800); }
     }
 
     /* ป้ายหลอน */
@@ -56,9 +59,9 @@
       margin-top: 15px; 
       background: #0f0202; 
       color: #ff5252; 
-      font-size: 13px; 
+      font-size: 14px; 
       font-weight: 700; 
-      padding: 8px 20px; 
+      padding: 8px 22px; 
       border-radius: 30px; 
       display: inline-block; 
       border: 1.5px solid #b71c1c;
@@ -66,7 +69,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* จังหวะระเบิด */
+    /* จังหวะระเบิดเมื่อเปิดไห */
     .spooky-explode { 
       animation: demonBurst 0.55s forwards ease-out !important; 
     }
@@ -99,7 +102,7 @@
       max-width: 320px; 
       width: 90%; 
       text-align: center; 
-      box-shadow: 0 0 40px rgba(255, 69, 0, 0.35); 
+      box-shadow: 0 0 40px rgba(255, 0, 0, 0.35); 
       animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
     }
 
@@ -186,43 +189,44 @@
 <body>
 
   <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
-    <!-- ไอคอนฟักทองปีศาจแบบ SVG น่ากลัว ตาเฉี่ยว ฟันแหลมคม -->
-    <div class="pumpkin-svg-wrap" id="boxIcon">
+    <!-- ไอคอนไหแม่นาค ดินเผาสีเข้ม ปิดผ้าแดงพันสายสิญจน์ -->
+    <div class="pot-svg-wrap" id="boxIcon">
       <svg viewBox="0 0 100 100" width="100%" height="100%">
-        <!-- ก้านฟักทอง -->
-        <path d="M47 18 C46 8, 55 5, 58 2 C56 7, 53 14, 52 18 Z" fill="#2d5016" />
-        <!-- ตัวผลฟักทองสีส้มอมดำเข้ม -->
-        <path d="M50 18 C28 18, 12 32, 12 55 C12 78, 28 92, 50 92 C72 92, 88 78, 88 55 C88 32, 72 18, 50 18 Z" fill="#b84503" />
-        <path d="M50 18 C36 18, 25 32, 25 55 C25 78, 36 92, 50 92 C64 92, 75 78, 75 55 C75 32, 64 18, 50 18 Z" fill="#d95407" />
-        <path d="M50 18 C43 18, 38 32, 38 55 C38 78, 43 92, 50 92 C57 92, 62 78, 62 55 C62 32, 57 18, 50 18 Z" fill="#ed6a13" />
+        <!-- ตัวไหดินเผา -->
+        <path d="M35 25 C20 30, 10 50, 15 75 C20 95, 80 95, 85 75 C90 50, 80 30, 65 25 Z" fill="#4a2715" />
+        <path d="M35 25 C20 30, 10 50, 15 75 C25 85, 40 85, 50 85 C35 70, 35 40, 50 25 C45 25, 40 25, 35 25 Z" fill="#2d1509" />
         
-        <!-- ดวงตาสยองขวัญทรงสามเหลี่ยมเฉี่ยว -->
-        <polygon points="26,45 39,49 32,37" class="glow-carve" />
-        <polygon points="74,45 61,49 68,37" class="glow-carve" />
-        <!-- จมูกสามเหลี่ยม -->
-        <polygon points="50,50 45,58 55,58" class="glow-carve" />
-        <!-- ปากยิ้มสยองพร้อมฟันแหลมคม -->
-        <path d="M24 65 Q50 86 76 65 Q66 76 50 76 Q34 76 24 65 Z" class="glow-carve" />
-        <polygon points="33,67 36,73 39,68" fill="#1b0707" />
-        <polygon points="45,69 48,76 52,70" fill="#1b0707" />
-        <polygon points="59,69 62,75 65,68" fill="#1b0707" />
-        <polygon points="40,75 43,69 47,75" fill="#1b0707" />
-        <polygon points="53,75 56,69 60,75" fill="#1b0707" />
+        <!-- ผ้าแดงยันต์ปิดปากไห -->
+        <path d="M28 22 C35 12, 65 12, 72 22 C80 29, 65 37, 50 37 C35 37, 20 29, 28 22 Z" fill="#8a0303" />
+        <path d="M28 22 Q50 32 72 22" stroke="#520000" stroke-width="2" fill="none"/>
+        <path d="M28 25 Q35 42 42 35" stroke="#520000" stroke-width="2" fill="none"/>
+        <path d="M72 25 Q65 42 58 35" stroke="#520000" stroke-width="2" fill="none"/>
+        
+        <!-- สายสิญจน์พันผ้าแดง -->
+        <path d="M25 27 Q50 36 75 27" stroke="#f2e2be" stroke-width="2" fill="none" />
+        <path d="M28 30 Q50 39 72 30" stroke="#f2e2be" stroke-width="2" fill="none" />
+        
+        <!-- อักขระยันต์จางๆ บนไห -->
+        <path d="M25 55 Q30 50 35 60 Q40 55 45 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
+        <path d="M75 55 Q70 50 65 60 Q60 55 55 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
+        
+        <!-- เลข 27 อาถรรพ์ตรงกลางไห -->
+        <text x="50" y="68" class="glow-text" text-anchor="middle">27</text>
       </svg>
     </div>
     
-    <div class="spooky-hint" id="statusHint">🩸 แตะปลดปล่อยคำสาป (10 สิทธิ์)</div>
+    <div class="spooky-hint" id="statusHint">🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)</div>
   </div>
 
   <!-- ป๊อปอัปเมื่อได้รางวัล -->
   <div class="popup-overlay" id="popupSuccess">
     <div class="popup-card">
-      <div style="font-size: 42px; margin-bottom: 4px;">🦇</div>
-      <div class="popup-title">ยินดีด้วย! คุณรอดชีวิต</div>
+      <div style="font-size: 42px; margin-bottom: 4px;">👻</div>
+      <div class="popup-title">วิญญาณให้โชค!</div>
       <div class="reward-box">
-        <div class="reward-name" id="prizeDisplay">กำลังดึงวิญญาณ...</div>
+        <div class="reward-name" id="prizeDisplay">กำลังดึงของรางวัล...</div>
       </div>
-      <div class="capture-note">📸 แคปหน้าจอนี้ไว้ก่อนหลักฐานจะหายไป</div>
+      <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นยันต์กันผี (หลักฐาน)</div>
       <p>แตะปุ่มด้านล่างเพื่อส่งหลักฐานยืนยันเข้า LINE OA CAH</p>
       <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
         ส่งข้อความยืนยันรับรางวัล ➔
@@ -234,8 +238,8 @@
   <div class="popup-overlay" id="popupEmpty">
     <div class="empty-card">
       <div style="font-size: 42px; margin-bottom: 4px;">💀</div>
-      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">สายเกินไปแล้ว...</h2>
-      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกคว้าของรางวัลไปหมดแล้วค่ะ</p>
+      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">ไหว่างเปล่า...</h2>
+      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกดึงของรางวัลในไหไปหมดแล้วค่ะ</p>
       <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
@@ -252,7 +256,7 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
 
-        // 1. เสียงเบสความถี่ต่ำคำรามกระแทกหู (Low Demon Rumble)
+        // 1. เสียงเบสความถี่ต่ำคำรามกระแทกหู (คล้ายเสียงเปิดไห)
         const subOsc = ctx.createOscillator();
         const subGain = ctx.createGain();
         subOsc.type = 'sawtooth';
@@ -265,7 +269,7 @@
         subOsc.start();
         subOsc.stop(ctx.currentTime + 1.2);
 
-        // 2. เสียงหวีดแหลมสยองขวัญบาดแก้วหู (High Spooky Screech)
+        // 2. เสียงหวีดแหลมสยองขวัญ (วิญญาณหลุดจากไห)
         const screechOsc = ctx.createOscillator();
         const screechGain = ctx.createGain();
         screechOsc.type = 'triangle';
@@ -278,21 +282,6 @@
         screechGain.connect(ctx.destination);
         screechOsc.start();
         screechOsc.stop(ctx.currentTime + 1.1);
-
-        // 3. เสียงสั่นระรัวแบบเสียงหัวเราะปีศาจ (Staccato Tremolo Laugh)
-        for (let i = 0; i < 5; i++) {
-          const laughOsc = ctx.createOscillator();
-          const laughGain = ctx.createGain();
-          const startTime = ctx.currentTime + 0.15 + (i * 0.14);
-          laughOsc.type = 'square';
-          laughOsc.frequency.setValueAtTime(320 - (i * 25), startTime);
-          laughGain.gain.setValueAtTime(0.25, startTime);
-          laughGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.11);
-          laughOsc.connect(laughGain);
-          laughGain.connect(ctx.destination);
-          laughOsc.start(startTime);
-          laughOsc.stop(startTime + 0.11);
-        }
       } catch (err) {
         console.error("Audio synth error", err);
       }
@@ -302,12 +291,12 @@
       if (isProcessing) return;
       isProcessing = true;
 
-      // ส่งเสียงสยองขวัญทันทีที่นิ้วสัมผัส
+      // ส่งเสียงวิญญาณหลอนทันทีที่แตะไห
       playTerrifyingHorrorSound();
 
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังปลดผนึกวิญญาณ...";
+      hint.innerText = "กำลังเปิดไหอาถรรพ์...";
 
       try {
         const response = await fetch(GAS_API_URL);
@@ -316,16 +305,17 @@
         if (result.status === "SUCCESS") {
           box.classList.add('spooky-explode');
           
+          // เอฟเฟกต์พลุกระจาย โทนสีแดงเลือด/ทอง/ดำ
           confetti({ 
             particleCount: 130, 
             spread: 80, 
             origin: { y: 0.6 },
-            colors: ['#ff3300', '#7b1fa2', '#000000', '#ffaa00']
+            colors: ['#cc0000', '#ffd700', '#000000', '#8a0303']
           });
 
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดไหได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
           setTimeout(() => {
@@ -338,7 +328,7 @@
       } catch (err) {
         alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "🩸 แตะปลดปล่อยคำสาป (10 สิทธิ์)";
+        hint.innerText = "🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)";
       }
     }
   </script>
