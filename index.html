@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- เพิ่มฟอนต์ Nosifer (ตัวอักษรเลือดไหล) และ Prompt -->
   <link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Prompt:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
-    /* พื้นหลังสีดำสนิท แสงหมอกสีส้มเลือด */
+    /* พื้นหลังสีดำสนิท กลืนกับขอบรูป */
     body { 
-      background: radial-gradient(circle at 50% 60%, #290808 0%, #0d0303 50%, #000000 100%); 
+      background: #000000; 
       display: flex; 
       justify-content: center; 
       align-items: center; 
@@ -21,7 +20,6 @@
       position: relative;
     }
 
-    /* คอนเทนเนอร์หลัก */
     .spooky-container { 
       text-align: center; 
       cursor: pointer; 
@@ -31,63 +29,39 @@
       padding: 20px;
     }
 
-    /* ของตกแต่งฮาโลวีนข้างไหผี */
-    .decor-prop {
-      position: absolute;
-      font-size: 42px;
-      pointer-events: none;
-      filter: drop-shadow(0 0 15px rgba(255, 69, 0, 0.8));
-      animation: spookyFloat 3s infinite ease-in-out alternate;
-    }
-    .prop-left { bottom: 25px; left: -35px; transform: rotate(-15deg); animation-delay: 0.2s; }
-    .prop-right { bottom: 25px; right: -35px; transform: rotate(15deg); animation-delay: 0.8s; }
-
-    .decor-bat {
-      position: absolute;
-      font-size: 28px;
-      pointer-events: none;
-      filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
-      animation: batHover 2s infinite ease-in-out alternate;
-    }
-    .bat-left { top: -5px; left: -20px; transform: rotate(-20deg); animation-delay: 0.5s; }
-    .bat-right { top: 15px; right: -25px; transform: rotate(20deg) scaleX(-1); animation-delay: 1.2s; }
-
-    @keyframes batHover {
-      0% { transform: translateY(0) rotate(-15deg); }
-      100% { transform: translateY(-12px) rotate(-5deg); }
-    }
-
-    /* ไหแม่นาค */
-    .pot-svg-wrap {
-      width: 150px;
-      height: 150px;
+    /* =========================================
+       รูปภาพป้ายอาถรรพ์ (ใส่แอนิเมชันให้ขยับได้)
+       ========================================= */
+    .bloody-text-wrap {
+      width: 320px; /* ขนาดความกว้างรูปภาพ */
+      max-width: 85vw;
       margin: 0 auto;
-      animation: spookyFloat 2.6s infinite ease-in-out;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.7)) drop-shadow(0 0 45px rgba(255, 80, 0, 0.5));
+      /* แอนิเมชันลอยและหายใจ */
+      animation: floatBreathe 3s infinite ease-in-out;
       transition: transform 0.2s, filter 0.2s;
-      position: relative;
-      z-index: 5;
     }
-    .spooky-container:hover .pot-svg-wrap {
-      transform: scale(1.1) rotate(-3deg);
-      filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.95)) drop-shadow(0 0 60px rgba(255, 120, 0, 0.8));
+    
+    .bloody-image {
+      width: 100%;
+      height: auto;
+      border-radius: 12px; /* ลบมุมภาพให้มนเล็กน้อยให้กลืนกับฉาก */
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.15); /* แสงแดงสะท้อนจางๆ รอบรูป */
     }
 
-    /* สไตล์ตัวอักษร 27 แบบเลือดไหล (Dripping Blood) */
-    .glow-text {
-      font-family: 'Nosifer', cursive;
-      font-size: 20px; /* ปรับขนาดให้พอดีไห เพราะฟอนต์นี้มีหยดเลือดยาว */
-      fill: #ff0000;
-      filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 15px #ff4500);
-      animation: flickerBlood 0.15s infinite alternate;
+    /* เวลาเอาเมาส์ชี้ รูปจะขยายตัวและเอียงเล็กน้อย พร้อมแสงแดงสว่างขึ้น */
+    .spooky-container:hover .bloody-text-wrap {
+      transform: scale(1.08) rotate(-2deg);
+      filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.9));
     }
-    @keyframes flickerBlood {
-      0% { opacity: 0.8; filter: drop-shadow(0 0 5px #cc0000); }
-      100% { opacity: 1; filter: drop-shadow(0 0 15px #ff2a00) drop-shadow(0 0 25px #ff0000); }
+
+    /* จังหวะการขยับและเปล่งแสงของรูปภาพ */
+    @keyframes floatBreathe {
+      0%, 100% { transform: translateY(0) scale(1); filter: brightness(1) drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); }
+      50% { transform: translateY(-10px) scale(1.02); filter: brightness(1.25) drop-shadow(0 0 35px rgba(255, 0, 0, 0.85)); }
     }
 
     .spooky-hint { 
-      margin-top: 15px; 
+      margin-top: 25px; 
       background: #0f0202; 
       color: #ff5252; 
       font-size: 14px; 
@@ -102,12 +76,9 @@
       z-index: 5;
     }
 
+    /* จังหวะระเบิดเมื่อกดจิ้มรูป */
     .spooky-explode { 
       animation: demonBurst 0.55s forwards ease-out !important; 
-    }
-    @keyframes spookyFloat { 
-      0%, 100% { transform: translateY(0) rotate(0deg); } 
-      50% { transform: translateY(-12px) rotate(3deg); } 
     }
     @keyframes demonBurst {
       0% { transform: scale(1); filter: brightness(1.5); }
@@ -115,7 +86,9 @@
       100% { transform: scale(0); opacity: 0; filter: blur(14px); }
     }
 
-    /* ป๊อปอัปผลรางวัล */
+    /* =========================================
+       ป๊อปอัปผลรางวัล
+       ========================================= */
     .popup-overlay { 
       display: none; 
       position: fixed; 
@@ -213,39 +186,15 @@
 </head>
 <body>
 
-  <!-- คอนเทนเนอร์หลัก ไหแม่นาค + ของตกแต่ง -->
+  <!-- คอนเทนเนอร์หลัก -->
   <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
     
-    <!-- ของตกแต่งฮาโลวีนด้านข้าง -->
-    <div class="decor-prop prop-left">🎃</div>
-    <div class="decor-prop prop-right">💀</div>
-    <div class="decor-bat bat-left">🦇</div>
-    <div class="decor-bat bat-right">🦇</div>
-
-    <!-- ไหแม่นาค 27 เลือดไหล -->
-    <div class="pot-svg-wrap" id="boxIcon">
-      <svg viewBox="0 0 100 100" width="100%" height="100%">
-        <!-- ตัวไหดินเผา -->
-        <path d="M35 25 C20 30, 10 50, 15 75 C20 95, 80 95, 85 75 C90 50, 80 30, 65 25 Z" fill="#4a2715" />
-        <path d="M35 25 C20 30, 10 50, 15 75 C25 85, 40 85, 50 85 C35 70, 35 40, 50 25 C45 25, 40 25, 35 25 Z" fill="#2d1509" />
-        <!-- ผ้าแดงยันต์ปิดปากไห -->
-        <path d="M28 22 C35 12, 65 12, 72 22 C80 29, 65 37, 50 37 C35 37, 20 29, 28 22 Z" fill="#8a0303" />
-        <path d="M28 22 Q50 32 72 22" stroke="#ff3333" stroke-width="2" fill="none"/>
-        <path d="M28 25 Q35 42 42 35" stroke="#520000" stroke-width="2" fill="none"/>
-        <path d="M72 25 Q65 42 58 35" stroke="#520000" stroke-width="2" fill="none"/>
-        <!-- สายสิญจน์พันผ้าแดง -->
-        <path d="M25 27 Q50 36 75 27" stroke="#f2e2be" stroke-width="2" fill="none" />
-        <path d="M28 30 Q50 39 72 30" stroke="#f2e2be" stroke-width="2" fill="none" />
-        <!-- อักขระยันต์จางๆ บนไห -->
-        <path d="M25 55 Q30 50 35 60 Q40 55 45 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
-        <path d="M75 55 Q70 50 65 60 Q60 55 55 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
-        
-        <!-- เลข 27 อาถรรพ์ ฟอนต์เลือดไหล -->
-        <text x="50" y="66" class="glow-text" text-anchor="middle">27</text>
-      </svg>
+    <!-- ดึงรูปภาพ outing2026.png มาแสดง และใส่คลาสให้รูปขยับได้ -->
+    <div class="bloody-text-wrap" id="boxIcon">
+      <img src="outing2026.png" alt="เจริญสุข Outing 2026" class="bloody-image">
     </div>
     
-    <div class="spooky-hint" id="statusHint">🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)</div>
+    <div class="spooky-hint" id="statusHint">🩸 จิ้มเพื่อปลดผนึก (สุ่ม 10 สิทธิ์)</div>
   </div>
 
   <!-- ป๊อปอัปผลรางวัล -->
@@ -268,8 +217,8 @@
   <div class="popup-overlay" id="popupEmpty">
     <div class="empty-card">
       <div style="font-size: 42px; margin-bottom: 4px;">💀</div>
-      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">ไหว่างเปล่า...</h2>
-      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกดึงของรางวัลในไหไปหมดแล้วค่ะ</p>
+      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">สิทธิ์ถูกกลืนกิน...</h2>
+      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกดึงของรางวัลไปหมดแล้วค่ะ</p>
       <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
@@ -349,7 +298,7 @@
 
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังเปิดไหอาถรรพ์...";
+      hint.innerText = "กำลังปลดผนึกอาถรรพ์...";
 
       try {
         const response = await fetch(GAS_API_URL);
@@ -363,7 +312,7 @@
 
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดไหได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
           // หน่วงเวลาเปิดป๊อปอัปนิดนึง ให้ดูพลุแตกก่อน
@@ -377,7 +326,7 @@
       } catch (err) {
         alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)";
+        hint.innerText = "🩸 จิ้มเพื่อปลดผนึก (สุ่ม 10 สิทธิ์)";
       }
     }
   </script>
