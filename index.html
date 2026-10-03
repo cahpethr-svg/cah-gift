@@ -192,14 +192,15 @@
 </head>
 <body>
 
-  <!-- ไฟล์เสียงภายนอก MP3 คุณภาพสูง (โหลดเร็ว ไม่โดนบล็อก) -->
-  <!-- 1. เสียงลมบรรยากาศป่าช้าคลอเบาๆ -->
-  <audio id="sndAmbient" loop preload="auto">
+  <!-- เสียงซาวด์ประกอบ -->
+  <!-- 1. เสียงบรรยากาศหลอน (ดนตรีสยองขวัญคลอวนซ้ำ) -->
+  <audio id="sndAmbient" loop preload="auto" playsinline>
     <source src="https://assets.mixkit.co/active_storage/sfx/1231/1231-preview.mp3" type="audio/mpeg">
   </audio>
-  <!-- 2. เสียงกระชากวิญญาณตอนเปิดแฟ้ม (Jumpscare / Horror Boom) -->
-  <audio id="sndOpen" preload="auto">
-    <source src="https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3" type="audio/mpeg">
+
+  <!-- 2. เสียงหวีดร้องสยองขวัญ (Female Horror Scream / Jumpscare) -->
+  <audio id="sndScream" preload="auto" playsinline>
+    <source src="https://cdn.freesound.org/previews/415/415209_5121236-lq.mp3" type="audio/mpeg">
   </audio>
 
   <div class="moon" aria-hidden="true"></div>
@@ -285,30 +286,32 @@
     let isProcessing = false;
 
     function hasPlayed() {
-      return false; // โหมดเทส
+      return false; // โหมดเทส (กดได้เรื่อยๆ)
     }
     function setPlayedFlag() {}
 
-    // เล่นเสียงบรรยากาศลมหลอนเบาๆ ทันทีที่แตะหน้าจอครั้งแรก
-    function triggerAmbientSound() {
+    // ฟังก์ชันเล่นเสียงบรรยากาศหลอน
+    function playAmbient() {
       const amb = document.getElementById('sndAmbient');
       if (amb && amb.paused) {
-        amb.volume = 0.35;
-        amb.play().catch(e => console.log("Ambient autoplay blocked", e));
+        amb.volume = 0.45;
+        amb.play().catch(() => {});
       }
     }
 
-    document.addEventListener('touchstart', triggerAmbientSound, { once: true });
-    document.addEventListener('click', triggerAmbientSound, { once: true });
-
-    function playOpenHorrorSound() {
-      const snd = document.getElementById('sndOpen');
-      if (snd) {
-        snd.currentTime = 0;
-        snd.volume = 0.9;
-        snd.play().catch(e => console.log("Open sound play blocked", e));
+    // ฟังก์ชันเล่นเสียงหวีดร้องตอนเปิดได้รางวัล
+    function playScreamSound() {
+      const scream = document.getElementById('sndScream');
+      if (scream) {
+        scream.currentTime = 0;
+        scream.volume = 1.0;
+        scream.play().catch(() => {});
       }
     }
+
+    // ปลดล็อกระบบเสียงทันทีเมื่อมีการสัมผัสหน้าจอส่วนใดก็ได้
+    document.addEventListener('touchstart', playAmbient, { once: true });
+    document.addEventListener('click', playAmbient, { once: true });
 
     function makeAmbientBlood() {
       const layer = document.getElementById('ambientBlood');
@@ -384,8 +387,7 @@
     }
 
     async function handleBoxClick() {
-      triggerAmbientSound();
-      playOpenHorrorSound(); // สั่งเล่นเสียง MP3 ทันทีที่แตะ
+      playAmbient(); // เปิดเสียงบรรยากาศ
 
       if (hasPlayed()) {
         alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)');
@@ -413,12 +415,16 @@
         const result = await response.json();
 
         if (result.status === 'SUCCESS') {
+          // ยิงเสียงหวีดร้องทันทีที่ระบบคอนเฟิร์มว่าเปิดได้รางวัล!
+          playScreamSound();
+
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
           const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
+          // หน่วงเวลา 3 วินาทีตามที่ตั้งไว้ เพื่อให้เสียงหวีดร้องและเอฟเฟกต์เล่นเสร็จก่อนเปิดป๊อปอัป
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
           }, 3000);
