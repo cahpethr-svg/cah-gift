@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- เพิ่มฟอนต์ Nosifer (ตัวอักษรเลือดไหล) และ Prompt -->
   <link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Prompt:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', -apple-system, sans-serif; }
     
-    /* พื้นหลังสีดำสนิท แสงหมอกสีส้มเลือด */
     body { 
-      background: radial-gradient(circle at 50% 60%, #290808 0%, #0d0303 50%, #000000 100%); 
+      background: radial-gradient(circle at 50% 50%, #1a0f0f 0%, #050101 100%); 
       display: flex; 
       justify-content: center; 
       align-items: center; 
@@ -21,7 +19,6 @@
       position: relative;
     }
 
-    /* คอนเทนเนอร์หลัก */
     .spooky-container { 
       text-align: center; 
       cursor: pointer; 
@@ -31,63 +28,32 @@
       padding: 20px;
     }
 
-    /* ของตกแต่งฮาโลวีนข้างไหผี */
-    .decor-prop {
-      position: absolute;
-      font-size: 42px;
-      pointer-events: none;
-      filter: drop-shadow(0 0 15px rgba(255, 69, 0, 0.8));
-      animation: spookyFloat 3s infinite ease-in-out alternate;
-    }
-    .prop-left { bottom: 25px; left: -35px; transform: rotate(-15deg); animation-delay: 0.2s; }
-    .prop-right { bottom: 25px; right: -35px; transform: rotate(15deg); animation-delay: 0.8s; }
-
-    .decor-bat {
-      position: absolute;
-      font-size: 28px;
-      pointer-events: none;
-      filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
-      animation: batHover 2s infinite ease-in-out alternate;
-    }
-    .bat-left { top: -5px; left: -20px; transform: rotate(-20deg); animation-delay: 0.5s; }
-    .bat-right { top: 15px; right: -25px; transform: rotate(20deg) scaleX(-1); animation-delay: 1.2s; }
-
-    @keyframes batHover {
-      0% { transform: translateY(0) rotate(-15deg); }
-      100% { transform: translateY(-12px) rotate(-5deg); }
-    }
-
-    /* ไหแม่นาค */
-    .pot-svg-wrap {
-      width: 150px;
-      height: 150px;
+    /* รูปแฟ้มหมายเลข 27 */
+    .folder-wrap {
+      width: 260px;
+      max-width: 80vw;
       margin: 0 auto;
-      animation: spookyFloat 2.6s infinite ease-in-out;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.7)) drop-shadow(0 0 45px rgba(255, 80, 0, 0.5));
+      animation: spookyFloat 3s infinite ease-in-out;
       transition: transform 0.2s, filter 0.2s;
-      position: relative;
-      z-index: 5;
     }
-    .spooky-container:hover .pot-svg-wrap {
-      transform: scale(1.1) rotate(-3deg);
-      filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.95)) drop-shadow(0 0 60px rgba(255, 120, 0, 0.8));
+    .folder-image {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 20px rgba(138, 3, 3, 0.4);
+    }
+    .spooky-container:hover .folder-wrap {
+      transform: scale(1.05) rotate(-2deg);
+      filter: drop-shadow(0 0 25px rgba(200, 0, 0, 0.8));
     }
 
-    /* สไตล์ตัวอักษร 27 แบบเลือดไหล (Dripping Blood) */
-    .glow-text {
-      font-family: 'Nosifer', cursive;
-      font-size: 20px; /* ปรับขนาดให้พอดีไห เพราะฟอนต์นี้มีหยดเลือดยาว */
-      fill: #ff0000;
-      filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 15px #ff4500);
-      animation: flickerBlood 0.15s infinite alternate;
-    }
-    @keyframes flickerBlood {
-      0% { opacity: 0.8; filter: drop-shadow(0 0 5px #cc0000); }
-      100% { opacity: 1; filter: drop-shadow(0 0 15px #ff2a00) drop-shadow(0 0 25px #ff0000); }
+    @keyframes spookyFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-12px) scale(1.02); }
     }
 
     .spooky-hint { 
-      margin-top: 15px; 
+      margin-top: 25px; 
       background: #0f0202; 
       color: #ff5252; 
       font-size: 14px; 
@@ -98,64 +64,63 @@
       border: 1.5px solid #b71c1c;
       box-shadow: 0 0 18px rgba(220, 38, 38, 0.5); 
       letter-spacing: 0.5px;
-      position: relative;
-      z-index: 5;
     }
 
-    .spooky-explode { 
-      animation: demonBurst 0.55s forwards ease-out !important; 
+    /* เอฟเฟกต์หน้าจอวาบสีเลือดตอนเปิดแฟ้ม */
+    .blood-flash {
+      position: fixed; 
+      inset: 0;
+      background: rgba(180, 0, 0, 0.85);
+      z-index: 900;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
     }
-    @keyframes spookyFloat { 
-      0%, 100% { transform: translateY(0) rotate(0deg); } 
-      50% { transform: translateY(-12px) rotate(3deg); } 
-    }
-    @keyframes demonBurst {
-      0% { transform: scale(1); filter: brightness(1.5); }
-      35% { transform: scale(1.4) rotate(12deg); filter: brightness(3) drop-shadow(0 0 40px red); }
-      100% { transform: scale(0); opacity: 0; filter: blur(14px); }
-    }
+    .flash-active { opacity: 1 !important; transition: opacity 0.05s; }
+    .flash-fade { opacity: 0 !important; transition: opacity 1.5s ease-out; }
 
     /* ป๊อปอัปผลรางวัล */
     .popup-overlay { 
       display: none; 
       position: fixed; 
       inset: 0; 
-      background: rgba(0, 0, 0, 0.94); 
+      background: rgba(0, 0, 0, 0.92); 
       backdrop-filter: blur(8px); 
       justify-content: center; 
       align-items: center; 
       z-index: 999; 
     }
     .popup-card { 
-      background: #0f0b12; 
-      border: 1.5px solid #ff4500; 
-      border-radius: 20px; 
+      background: #0a0404; 
+      border: 2px solid #8a0303; 
+      border-radius: 12px; 
       padding: 26px 20px; 
       max-width: 320px; 
       width: 90%; 
       text-align: center; 
-      box-shadow: 0 0 45px rgba(255, 0, 0, 0.4); 
+      box-shadow: 0 0 50px rgba(180, 0, 0, 0.5) inset, 0 0 45px rgba(255, 0, 0, 0.4); 
       animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
     }
     .popup-title {
-      font-size: 19px;
-      font-weight: 700;
-      color: #ffaa5a;
-      text-shadow: 0 0 10px rgba(255, 117, 24, 0.5);
-      margin-bottom: 6px;
+      font-family: 'Nosifer', cursive;
+      font-size: 16px;
+      color: #ff0000;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      margin-bottom: 12px;
+      line-height: 1.6;
     }
     .reward-box { 
       background: rgba(255, 255, 255, 0.05); 
       border: 1.5px dashed #ff4500; 
       padding: 12px; 
-      border-radius: 12px; 
+      border-radius: 8px; 
       margin: 14px 0; 
     }
     .reward-name { 
-      font-size: 16px; 
+      font-size: 17px; 
       font-weight: 700; 
-      color: #38bdf8; 
-      text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      color: #fff; 
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
     .capture-note { 
       font-size: 12px; 
@@ -164,33 +129,32 @@
       background: rgba(220, 38, 38, 0.25); 
       border: 1px solid rgba(239, 68, 68, 0.4);
       padding: 7px; 
-      border-radius: 8px; 
+      border-radius: 6px; 
       margin-bottom: 14px; 
     }
     .popup-card p { 
       font-size: 13px; 
       color: #cbd5e1; 
       margin-bottom: 16px; 
-      line-height: 1.4; 
     }
     .line-claim-btn { 
       display: block; 
-      background: #06c755; 
+      background: #8a0303; 
       color: #fff; 
       text-decoration: none; 
       font-size: 14px; 
       font-weight: 700; 
       padding: 11px 18px; 
-      border-radius: 25px; 
-      box-shadow: 0 0 20px rgba(6, 199, 85, 0.5); 
+      border-radius: 6px; 
+      box-shadow: 0 0 15px rgba(138, 3, 3, 0.8); 
       transition: transform 0.2s;
     }
-    .line-claim-btn:hover { transform: scale(1.03); }
+    .line-claim-btn:hover { transform: scale(1.03); background: #b30000; }
 
     .empty-card { 
       background: #141416; 
       border: 1px solid #3f3f46; 
-      border-radius: 20px; 
+      border-radius: 12px; 
       padding: 26px 20px; 
       max-width: 320px; 
       width: 90%; 
@@ -200,7 +164,7 @@
       background: #3f3f46; 
       color: #a1a1aa; 
       padding: 10px 18px; 
-      border-radius: 25px; 
+      border-radius: 6px; 
       display: block; 
       margin-top: 15px; 
       font-weight: 700; 
@@ -213,50 +177,28 @@
 </head>
 <body>
 
-  <!-- คอนเทนเนอร์หลัก ไหแม่นาค + ของตกแต่ง -->
+  <!-- เลเยอร์สีเลือดที่จะวาบขึ้นมาตอนกด -->
+  <div id="bloodFlash" class="blood-flash"></div>
+
+  <!-- คอนเทนเนอร์หลัก -->
   <div class="spooky-container" id="giftBox" onclick="handleBoxClick()">
     
-    <!-- ของตกแต่งฮาโลวีนด้านข้าง -->
-    <div class="decor-prop prop-left">🎃</div>
-    <div class="decor-prop prop-right">💀</div>
-    <div class="decor-bat bat-left">🦇</div>
-    <div class="decor-bat bat-right">🦇</div>
-
-    <!-- ไหแม่นาค 27 เลือดไหล -->
-    <div class="pot-svg-wrap" id="boxIcon">
-      <svg viewBox="0 0 100 100" width="100%" height="100%">
-        <!-- ตัวไหดินเผา -->
-        <path d="M35 25 C20 30, 10 50, 15 75 C20 95, 80 95, 85 75 C90 50, 80 30, 65 25 Z" fill="#4a2715" />
-        <path d="M35 25 C20 30, 10 50, 15 75 C25 85, 40 85, 50 85 C35 70, 35 40, 50 25 C45 25, 40 25, 35 25 Z" fill="#2d1509" />
-        <!-- ผ้าแดงยันต์ปิดปากไห -->
-        <path d="M28 22 C35 12, 65 12, 72 22 C80 29, 65 37, 50 37 C35 37, 20 29, 28 22 Z" fill="#8a0303" />
-        <path d="M28 22 Q50 32 72 22" stroke="#ff3333" stroke-width="2" fill="none"/>
-        <path d="M28 25 Q35 42 42 35" stroke="#520000" stroke-width="2" fill="none"/>
-        <path d="M72 25 Q65 42 58 35" stroke="#520000" stroke-width="2" fill="none"/>
-        <!-- สายสิญจน์พันผ้าแดง -->
-        <path d="M25 27 Q50 36 75 27" stroke="#f2e2be" stroke-width="2" fill="none" />
-        <path d="M28 30 Q50 39 72 30" stroke="#f2e2be" stroke-width="2" fill="none" />
-        <!-- อักขระยันต์จางๆ บนไห -->
-        <path d="M25 55 Q30 50 35 60 Q40 55 45 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
-        <path d="M75 55 Q70 50 65 60 Q60 55 55 65" stroke="#8a0303" stroke-width="1.5" fill="none" opacity="0.6" />
-        
-        <!-- เลข 27 อาถรรพ์ ฟอนต์เลือดไหล -->
-        <text x="50" y="66" class="glow-text" text-anchor="middle">27</text>
-      </svg>
+    <div class="folder-wrap" id="boxIcon">
+      <!-- ดึงรูปแฟ้มหมายเลข 27 มาแสดง -->
+      <img src="folder27.jpg" alt="แฟ้มคดี 27" class="folder-image">
     </div>
     
-    <div class="spooky-hint" id="statusHint">🩸 เปิดไหแม่นาค (สุ่ม 10 สิทธิ์)</div>
+    <div class="spooky-hint" id="statusHint">🩸 เปิดแฟ้มคดี (สุ่ม 10 สิทธิ์)</div>
   </div>
 
   <!-- ป๊อปอัปผลรางวัล -->
   <div class="popup-overlay" id="popupSuccess">
     <div class="popup-card">
-      <div style="font-size: 42px; margin-bottom: 4px;">👻</div>
-      <div class="popup-title">วิญญาณให้โชค!</div>
+      <div class="popup-title">แฟ้มถูกเปิดออก!</div>
       <div class="reward-box">
-        <div class="reward-name" id="prizeDisplay">กำลังดึงของรางวัล...</div>
+        <div class="reward-name" id="prizeDisplay">กำลังค้นหาข้อมูล...</div>
       </div>
-      <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นยันต์กันผี (หลักฐาน)</div>
+      <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นหลักฐานทันที</div>
       <p>แตะปุ่มด้านล่างเพื่อส่งหลักฐานยืนยันเข้า LINE OA CAH</p>
       <a href="#" id="lineSendBtn" target="_blank" class="line-claim-btn">
         ส่งข้อความยืนยันรับรางวัล ➔
@@ -268,17 +210,17 @@
   <div class="popup-overlay" id="popupEmpty">
     <div class="empty-card">
       <div style="font-size: 42px; margin-bottom: 4px;">💀</div>
-      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">ไหว่างเปล่า...</h2>
-      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกดึงของรางวัลในไหไปหมดแล้วค่ะ</p>
+      <h2 style="color: #f87171; font-size: 18px; margin-bottom: 8px;">แฟ้มว่างเปล่า...</h2>
+      <p style="font-size: 13px; color: #a1a1aa;">ผู้รอดชีวิต 10 คนแรกคว้าข้อมูลในแฟ้มไปหมดแล้วค่ะ</p>
       <div class="empty-btn">โควตาหมดสิ้นแล้ว</div>
     </div>
   </div>
+
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
     const lineAccountID = "707nyqrq";
     let isProcessing = false;
 
-    // ฟังก์ชันเช็กประวัติการเล่น (ทำแบบปลอดภัย ป้องกันกรณีมือถือบล็อกระบบจดจำ)
     function hasPlayed() {
       try { return localStorage.getItem("cahOutingPlayed") === "true"; } 
       catch (e) { return false; }
@@ -288,7 +230,6 @@
       catch (e) { console.warn("Local storage blocked"); }
     }
 
-    // ตรวจสอบตั้งแต่ตอนโหลดหน้าเว็บ
     window.onload = function() {
       if (hasPlayed()) {
         document.getElementById('statusHint').innerText = "🚫 สิทธิ์ของเครื่องนี้ถูกใช้ไปแล้ว";
@@ -296,7 +237,6 @@
       }
     };
 
-    // เสียงสยองขวัญสังเคราะห์
     function playTerrifyingHorrorSound() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -326,41 +266,43 @@
         screechGain.connect(ctx.destination);
         screechOsc.start();
         screechOsc.stop(ctx.currentTime + 1.1);
-      } catch (err) {
-        console.error("Audio synth error", err);
-      }
+      } catch (err) { }
     }
 
-    // ฟังก์ชันยิงพลุอลังการ (ต่อเนื่อง 10 วินาที)
-    function shootGrandConfetti() {
-      const duration = 3000;
+    // ฟังก์ชันสร้างเอฟเฟกต์เลือดพุ่งสาดกระจาย
+    function shootBloodSplatter() {
+      const duration = 2500;
       const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
-
-      function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+      
+      // ตั้งค่า Confetti ให้ดูเหมือนหยดเลือดขนาดใหญ่ตกลงมาอย่างรวดเร็ว
+      const defaults = { 
+        startVelocity: 40, 
+        spread: 360, 
+        ticks: 80, 
+        zIndex: 9999,
+        colors: ['#8a0303', '#cc0000', '#5e0000', '#ff0000'],
+        shapes: ['circle'],
+        gravity: 2,
+        scalar: 1.5
+      };
 
       const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) return clearInterval(interval);
 
-        const particleCount = 50 * (timeLeft / duration);
+        const particleCount = 60 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, {
           particleCount,
-          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
-          colors: ['#cc0000', '#ff0000', '#000000', '#8a0303']
+          origin: { x: Math.random(), y: Math.random() - 0.2 }
         }));
-      }, 250);
+      }, 200);
     }
 
     async function handleBoxClick() {
-      // ดักจับคนเนียน: ถ้าระบบจำได้ว่าเคยเล่นแล้ว ให้หยุดทำงานทันที
       if (hasPlayed()) {
-        alert("คุณได้ใช้สิทธิ์สุ่มรางวัลของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)");
+        alert("คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)");
         return;
       }
-
       if (isProcessing) return;
       isProcessing = true;
 
@@ -368,27 +310,38 @@
 
       const box = document.getElementById('boxIcon');
       const hint = document.getElementById('statusHint');
-      hint.innerText = "กำลังปลดผนึกอาถรรพ์...";
+      const bloodFlash = document.getElementById('bloodFlash');
+      
+      hint.innerText = "กำลังแกะรอยข้อมูล...";
 
       try {
         const response = await fetch(GAS_API_URL);
         const result = await response.json();
 
         if (result.status === "SUCCESS") {
-          box.classList.add('spooky-explode');
+          // ซ่อนแฟ้ม
+          box.style.display = 'none';
           
-          // บันทึกลงเครื่องทันทีว่าคนนี้รับรางวัลไปแล้ว
+          // สั่งให้หน้าจอวาบสีเลือด
+          bloodFlash.classList.add('flash-active');
+          setTimeout(() => {
+            bloodFlash.classList.remove('flash-active');
+            bloodFlash.classList.add('flash-fade');
+          }, 150);
+          
+          // สาดหยดเลือด
+          shootBloodSplatter();
+          
           setPlayedFlag();
-          
-          shootGrandConfetti();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันสุ่มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
+          // หน่วงเวลาให้เห็นเลือดสาดก่อนป๊อปอัปขึ้น
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
-          }, 800);
+          }, 900);
 
         } else {
           document.getElementById('popupEmpty').style.display = 'flex';
@@ -396,9 +349,10 @@
       } catch (err) {
         alert("สัญญาณขาดหาย กรุณาลองใหม่อีกครั้งค่ะ");
         isProcessing = false;
-        hint.innerText = "🩸 จิ้มเพื่อปลดผนึก (สุ่ม 10 สิทธิ์)";
+        hint.innerText = "🩸 เปิดแฟ้มคดี (สุ่ม 10 สิทธิ์)";
       }
     }
   </script>
 
-  
+</body>
+</html>
