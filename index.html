@@ -460,8 +460,8 @@
     let isProcessing = false;
 
     function hasPlayed() {
-      try { return localStorage.getItem("cahOutingPlayed") === "true"; }
-      catch (e) { return false; }
+  return false; // ปิดระบบจำกัดสิทธิ์ชั่วคราวเพื่อเทสระบบ
+}
     }
     function setPlayedFlag() {
       try { localStorage.setItem("cahOutingPlayed", "true"); }
