@@ -56,22 +56,83 @@
       filter: drop-shadow(10px 17px 12px rgba(0,0,0,.72)); transition: filter .5s ease;
     }
     @keyframes bookHover { 0%,100% { transform: translateY(0) rotateY(-10deg) rotateZ(-2deg); } 50% { transform: translateY(-8px) rotateY(-6deg) rotateZ(-1deg); } }
+    
+    /* สันเล่มและขอบกระดาษ */
     .book-pages {
       position: absolute; inset: 8px -10px 5px 13px; border-radius: 4px 9px 9px 4px;
-      background: repeating-linear-gradient(90deg, rgba(36,20,12,.72) 0 1px, transparent 1px 3px, rgba(231,204,157,.42) 3px 4px), linear-gradient(90deg, #4a3525, #d0bb91 12%, #8b7252 22%, #d8c49d 48%, #786044 78%, #d8c49d);
-      transform: translateZ(-5px); box-shadow: 5px 2px 0 #2c2018, 9px 4px 0 #19120e, 12px 7px 0 #090706;
+      background: linear-gradient(90deg, #4a3525, #8b7252 20%, #4a3525 90%);
+      transform: translateZ(-8px); box-shadow: 5px 2px 0 #2c2018, 9px 4px 0 #19120e;
+      pointer-events: none;
     }
     .book-back {
       position: absolute; inset: 0; border-radius: 5px 10px 10px 5px;
-      background: radial-gradient(ellipse at 16% 17%, rgba(8,5,4,.9) 0 2%, transparent 13%), radial-gradient(ellipse at 82% 78%, rgba(7,4,3,.85) 0 4%, transparent 17%), repeating-linear-gradient(8deg, transparent 0 19px, rgba(15,8,5,.2) 20px 21px, transparent 22px 39px), linear-gradient(110deg, #100b08, #59402b 12%, #26180f 28%, #795638 44%, #302016 64%, #17100d);
-      border: 2px solid #100b09; transform: translateZ(-2px);
+      background: #1a110c; border: 2px solid #100b09; transform: translateZ(-10px);
     }
+
+    /* =========================================
+       หน้ากระดาษเอกสารด้านใน (แก้ให้ลอยอยู่บนสุด)
+       ========================================= */
+    .inner-page {
+      position: absolute; inset: 6px 4px 6px 10px; border-radius: 2px 8px 8px 2px;
+      transform: translateZ(1px); /* อยู่ข้างหน้า ไม่โดนสันกระดาษบัง */
+      z-index: 5;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), transparent 70%),
+        repeating-linear-gradient(0deg, transparent 0 20px, rgba(90,50,30,0.07) 21px 22px),
+        linear-gradient(135deg, #dfcfad 0%, #ecdcb9 45%, #c8b087 100%);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.35), 2px 2px 6px rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 18px 14px;
+      text-align: center;
+    }
+    
+    .inner-stamp {
+      border: 2px solid #8e0008;
+      outline: 1px dashed #8e0008;
+      outline-offset: 2px;
+      color: #8e0008;
+      font: 12px 'Special Elite', monospace;
+      letter-spacing: .15em;
+      padding: 4px 10px;
+      margin-bottom: 12px;
+      transform: rotate(-3deg);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .inner-prize-title {
+      font-size: 11px;
+      color: #523120;
+      font-weight: 700;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .inner-prize-name {
+      font-size: clamp(15px, 4.2vw, 18px);
+      font-weight: 900;
+      color: #a0000a;
+      line-height: 1.4;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+      padding: 8px 4px;
+      border-top: 1.5px solid rgba(130, 20, 20, 0.4);
+      border-bottom: 1.5px solid rgba(130, 20, 20, 0.4);
+      width: 100%;
+      word-break: break-word;
+    }
+    .inner-note {
+      font-size: 10px;
+      color: #634331;
+      margin-top: 12px;
+      font-family: 'Special Elite', monospace;
+    }
+
+    /* ปกหน้าแฟ้ม 27 */
     .book-cover {
       position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d;
-      transform: translateZ(3px); border-radius: 5px 10px 10px 5px; border: 1px solid #9a7652; overflow: visible;
+      transform: translateZ(5px); border-radius: 5px 10px 10px 5px; border: 1px solid #9a7652; overflow: visible;
       background: radial-gradient(ellipse at 15% 10%, rgba(10,6,4,.82) 0 2%, transparent 15%), radial-gradient(ellipse at 88% 88%, rgba(10,5,3,.9) 0 3%, transparent 19%), radial-gradient(ellipse at 60% 25%, rgba(206,174,127,.18), transparent 34%), repeating-linear-gradient(13deg, transparent 0 31px, rgba(20,10,6,.16) 32px 33px, transparent 34px 57px), linear-gradient(135deg, #382719 0%, #80603e 10%, #3b2618 23%, #61452e 38%, #2c1b12 59%, #765438 74%, #20140e 100%);
       box-shadow: inset 5px 0 7px rgba(0,0,0,.8), inset -3px 0 3px rgba(0,0,0,.7), inset 0 0 35px rgba(0,0,0,.5);
       transition: transform 1.35s cubic-bezier(.18,.72,.18,1);
+      z-index: 10;
     }
     .book-cover::before {
       content: ""; position: absolute; inset: 10px; border: 1px solid rgba(220,187,137,.38); border-radius: 2px; box-shadow: inset 0 0 20px rgba(0,0,0,.55);
@@ -107,54 +168,6 @@
     .drip.d4 { left: 84%; height: 27px; width: 5px; animation-delay: -2.3s; }
     @keyframes bloodDrip { 0%, 20% { transform: scaleY(.3); opacity: .25; } 55% { transform: scaleY(1); opacity: 1; } 78% { transform: translateY(13px) scaleY(1.05); opacity: .9; } 100% { transform: translateY(22px) scaleY(.2); opacity: 0; } }
     .cover-bottom { position: absolute; left: 20px; right: 17px; bottom: 23px; display: flex; justify-content: space-between; color: rgba(226,198,158,.65); font: 8px 'Special Elite', monospace; letter-spacing: .12em; }
-    
-    /* =========================================
-       หน้ากระดาษด้านใน (ที่ผลรางวัลจะแสดง)
-       ========================================= */
-    .inner-page {
-      position: absolute; inset: 5px 3px 5px 9px; border-radius: 2px 7px 7px 2px; transform: translateZ(-1px);
-      background: radial-gradient(ellipse at 50% 45%, rgba(126,0,7,.18), transparent 55%),
-                  repeating-linear-gradient(0deg, transparent 0 20px, rgba(65,39,22,.12) 21px 22px),
-                  linear-gradient(100deg, #b7a17c, #e1d0ad 40%, #9c805c);
-      box-shadow: inset 4px 0 8px rgba(0,0,0,.3); overflow: hidden;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 16px;
-      text-align: center;
-    }
-    .inner-stamp {
-      border: 2px dashed rgba(120, 0, 8, 0.75);
-      color: #780008;
-      font: 13px 'Special Elite', monospace;
-      letter-spacing: .12em;
-      padding: 5px 10px;
-      margin-bottom: 12px;
-      transform: rotate(-4deg);
-      text-transform: uppercase;
-    }
-    .inner-prize-title {
-      font-size: 11px;
-      color: #4a2c1d;
-      font-weight: 700;
-      letter-spacing: .08em;
-      margin-bottom: 6px;
-    }
-    .inner-prize-name {
-      font-size: clamp(14px, 4vw, 17px);
-      font-weight: 900;
-      color: #90000a;
-      line-height: 1.4;
-      text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
-      padding: 6px;
-      border-top: 1px solid rgba(90,0,0,0.3);
-      border-bottom: 1px solid rgba(90,0,0,0.3);
-      width: 100%;
-      word-break: break-word;
-    }
-    .inner-note {
-      font-size: 10px;
-      color: #5c3a28;
-      margin-top: 10px;
-      font-family: 'Special Elite', monospace;
-    }
 
     .open-prompt { position: absolute; inset: auto -8% -7% -8%; text-align: center; color: #d5b8a2; font: 10px 'Special Elite', monospace; letter-spacing: .15em; text-shadow: 0 2px 5px #000; animation: promptPulse 2s ease-in-out infinite; }
     @keyframes promptPulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
@@ -162,7 +175,7 @@
     .book-stage:hover .book { filter: drop-shadow(0 0 18px rgba(166,0,8,.45)) drop-shadow(10px 17px 12px rgba(0,0,0,.7)); }
     .book-stage:hover .book-cover { border-color: #b27c59; }
 
-    /* กล่องปุ่มด้านล่างแฟ้ม */
+    /* ปุ่มกดยืนยันด้านล่าง */
     .action-panel {
       margin-top: 24px;
       width: min(88vw, 320px);
@@ -206,9 +219,9 @@
     .shake { animation: violentShake .5s linear; }
     @keyframes violentShake { 0%,100% { transform: translateX(0) rotate(0); } 15% { transform: translateX(-8px) rotate(-2deg); } 30% { transform: translateX(7px) rotate(2deg); } 45% { transform: translateX(-6px) rotate(-1deg); } 60% { transform: translateX(5px) rotate(1deg); } 75% { transform: translateX(-3px); } }
     
-    /* ตอนเปิดค้างไว้ */
+    /* สภาวะเมื่อเปิดแฟ้มออก */
     .opened-state .book { animation: none; transform: rotateY(0deg) rotateZ(0deg); }
-    .opened-state .book-cover { transform: rotateY(-160deg) translateZ(3px); }
+    .opened-state .book-cover { transform: rotateY(-145deg) translateZ(5px); }
     .opened-state .book-shadow { transform: scale(1.2) rotate(-4deg); opacity: .55; }
     .opened-state .open-prompt { display: none; }
 
@@ -238,16 +251,16 @@
       <div class="book-shadow"></div>
       <div class="book" id="boxIcon">
         <div class="book-back"></div>
+        <div class="book-pages"></div>
         
-        <!-- หน้ากระดาษด้านใน ที่ผลรางวัลจะปรากฏ -->
-        <div class="inner-page">
+        <!-- หน้ากระดาษเอกสารด้านใน (ที่ผลรางวัลจะแสดงชัดเจน 100%) -->
+        <div class="inner-page" id="innerPage">
           <div class="inner-stamp" id="stampStatus">CASE 27 · TOP SECRET</div>
           <div class="inner-prize-title" id="prizeTitleLabel">DOCUMENT REVEALED</div>
           <div class="inner-prize-name" id="prizeDisplay">กำลังแกะรอยข้อมูล...</div>
           <div class="inner-note" id="innerNote">📸 แคปหน้าจอนี้ไว้เป็นหลักฐาน</div>
         </div>
 
-        <div class="book-pages"></div>
         <div class="book-cover">
           <div class="cover-wear"></div>
           <i class="cover-scar scar-a"></i><i class="cover-scar scar-b"></i><i class="cover-scar scar-c"></i>
@@ -265,7 +278,7 @@
       <div class="open-prompt">TOUCH THE FILE · IF YOU DARE</div>
     </div>
 
-    <!-- กล่องควบคุมด้านล่างแฟ้ม (แสดงปุ่มต่างๆ เมื่อเปิดแล้ว) -->
+    <!-- ปุ่มด้านล่างแฟ้ม -->
     <div class="action-panel">
       <div class="status-pill" id="statusHint">🩸 แตะเพื่อเปิดแฟ้มคดี (สุ่ม 10 สิทธิ์)</div>
       
@@ -374,7 +387,7 @@
       
       stage.setAttribute('aria-disabled', 'true');
       stage.classList.add('shake');
-      scene.classList.add('opened-state'); // เปิดปกแฟ้มค้างไว้
+      scene.classList.add('opened-state'); // เปิดปกค้างไว้
       
       showBloodBurst();
 
@@ -383,39 +396,39 @@
         if (!response.ok) throw new Error('Network response was not OK');
         const result = await response.json();
 
-        // รอแอนิเมชันเปิดปกแฟ้มครบตามเวลา แล้วประทับผลรางวัลลงบนกระดาษ
+        // เมื่อระบบส่งข้อมูลรางวัลมา ให้แสดงผลบนหน้ากระดาษ
         setTimeout(() => {
           stage.classList.remove('shake');
 
           if (result.status === 'SUCCESS') {
             setPlayedFlag();
             
-            // นำรางวัลไปพิมพ์ลงในกระดาษหนังสือ
+            // นำรางวัลไปพิมพ์ลงบนหน้ากระดาษ
             document.getElementById('stampStatus').innerText = 'DECLASSIFIED · ผ่านการปลดผนึก';
-            document.getElementById('prizeTitleLabel').innerText = '🎉 รางวัลที่คุณค้นพบคือ:';
+            document.getElementById('prizeTitleLabel').innerText = '🎉 รางวัลที่คุณได้รับ:';
             document.getElementById('prizeDisplay').innerText = result.prize;
             document.getElementById('innerNote').innerText = '📸 แคปหน้าจอนี้ไว้เป็นหลักฐานยืนยัน';
 
-            // เตรียมลิงก์ LINE
-            const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
+            // ผูกลิงก์ LINE
+            const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
             document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
-            // ปรับข้อความสถานะและแสดงปุ่มกดยืนยัน
+            // แสดงปุ่มด้านล่าง
             hint.innerText = '✅ ปลดผนึกสำเร็จ! กรุณาส่งยืนยันใน LINE';
             document.getElementById('lineSendBtn').style.display = 'block';
             document.getElementById('backCanvaBtn').style.display = 'block';
 
           } else {
-            // กรณีสิทธิ์เต็ม 10 คน
+            // โควตาเต็ม
             document.getElementById('stampStatus').innerText = 'EXHAUSTED · สิทธิ์หมดสิ้นแล้ว';
             document.getElementById('prizeTitleLabel').innerText = '💀 แฟ้มว่างเปล่า...';
-            document.getElementById('prizeDisplay').innerText = 'ผู้รอดชีวิต 10 คนแรกคว้าของรางวัลไปหมดแล้ว';
-            document.getElementById('innerNote').innerText = 'ขออภัย โควตาเต็มแล้ว';
+            document.getElementById('prizeDisplay').innerText = 'ผู้รอดชีวิต 10 คนแรกคว้าไปหมดแล้ว';
+            document.getElementById('innerNote').innerText = 'ขออภัย โควตาเต็มแล้วค่ะ';
 
             hint.innerText = '💀 โควตารางวัลถูกใช้งานครบแล้ว';
             document.getElementById('backCanvaBtn').style.display = 'block';
           }
-        }, 1500);
+        }, 1200);
 
       } catch (err) {
         console.error(err);
