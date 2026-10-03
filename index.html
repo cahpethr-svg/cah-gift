@@ -230,10 +230,10 @@
         <div class="reward-name" id="prizeDisplay">กำลังค้นหาข้อมูล...</div>
       </div>
       <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นหลักฐานทันที</div>
-      <p>แตะปุ่มด้านล่าง ระบบจะคัดลอกข้อความและเปิด LINE OA CAH ให้ทันทีค่ะ</p>
-      <button id="lineSendBtn" class="line-claim-btn" onclick="sendToLineOA()">
+      <p>แตะปุ่มด้านล่างเพื่อส่งข้อความยืนยันรับสิทธิ์เข้า LINE OA ทันทีค่ะ</p>
+      <a href="#" id="lineSendBtn" class="line-claim-btn">
         💬 ส่งข้อความยืนยันรับรางวัลใน LINE ↗
-      </button>
+      </a>
     </div>
   </div>
 
@@ -248,14 +248,11 @@
 
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
-    
-    // ไอดี LINE OA ที่ถูกต้องตามที่แจ้งมา
     const lineAccountID = "787nqarq"; 
     
     let isProcessing = false;
-    let claimTextToCopy = "";
 
-    // ปิดระบบจำกัดสิทธิ์ชั่วคราวเพื่อเทสระบบ
+    // โหมดเทส (กดซ้ำได้เรื่อยๆ)
     function hasPlayed() {
       return false; 
     }
@@ -306,23 +303,23 @@
         const subGain = ctx.createGain();
         subOsc.type = 'sawtooth';
         subOsc.frequency.setValueAtTime(95, now);
-        subOsc.frequency.exponentialRampToValueAtTime(28, now + 1.1);
-        subGain.gain.setValueAtTime(0.22, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        subOsc.frequency.exponentialRampToValueAtTime(28, now + 1.8);
+        subGain.gain.setValueAtTime(0.25, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
         subOsc.connect(subGain); subGain.connect(ctx.destination);
-        subOsc.start(now); subOsc.stop(now + 1.2);
+        subOsc.start(now); subOsc.stop(now + 2.0);
 
         const scrape = ctx.createOscillator();
         const scrapeGain = ctx.createGain();
         scrape.type = 'triangle';
-        scrape.frequency.setValueAtTime(620, now);
-        scrape.frequency.linearRampToValueAtTime(1050, now + .22);
-        scrape.frequency.exponentialRampToValueAtTime(170, now + .95);
-        scrapeGain.gain.setValueAtTime(0.09, now);
-        scrapeGain.gain.exponentialRampToValueAtTime(0.001, now + 1);
+        scrape.frequency.setValueAtTime(580, now);
+        scrape.frequency.linearRampToValueAtTime(1100, now + .4);
+        scrape.frequency.exponentialRampToValueAtTime(140, now + 1.8);
+        scrapeGain.gain.setValueAtTime(0.12, now);
+        scrapeGain.gain.exponentialRampToValueAtTime(0.001, now + 1.9);
         scrape.connect(scrapeGain); scrapeGain.connect(ctx.destination);
-        scrape.start(now); scrape.stop(now + 1.02);
-        setTimeout(() => ctx.close().catch(() => {}), 1500);
+        scrape.start(now); scrape.stop(now + 1.9);
+        setTimeout(() => ctx.close().catch(() => {}), 2500);
       } catch (err) {}
     }
 
@@ -338,18 +335,7 @@
         layer.classList.remove('active');
         void layer.offsetWidth;
         layer.classList.add('active');
-        setTimeout(() => layer.classList.remove('active'), 1900);
       }
-    }
-
-    // ฟังก์ชันส่งไป LINE OA (เปิดหน้าโปรไฟล์/แชตแน่นอน 100% ไม่ติด Bad Request)
-    function sendToLineOA() {
-      if (navigator.clipboard && claimTextToCopy) {
-        navigator.clipboard.writeText(claimTextToCopy).catch(() => {});
-      }
-      
-      // ลิงก์มาตรฐานของ LINE OA ที่ค้นหาพบแน่นอน ไม่ขึ้น Bad Request
-      window.location.href = `https://line.me/R/ti/p/@${lineAccountID}`;
     }
 
     window.addEventListener('load', () => {
@@ -393,7 +379,9 @@
         stage.classList.add('shake');
       }
       if (scene) scene.classList.add('opening');
+      
       playTerrifyingHorrorSound();
+      showBloodBurst();
 
       try {
         const response = await fetch(GAS_API_URL, { method: 'GET', cache: 'no-store' });
@@ -401,21 +389,22 @@
         const result = await response.json();
 
         if (result.status === 'SUCCESS') {
-          showBloodBurst();
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          // ข้อความที่จะคัดลอกให้อัตโนมัติ
-          claimTextToCopy = `สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`;
+          // รูปแบบลิงก์ยิงข้อความตรงเข้า LINE OA (พร้อมพิมพ์ข้อความให้อัตโนมัติในแชต)
+          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
+          // หน่วงเวลาครบ 3 วินาที (3,000 มิลลิวินาที) ให้เปิดแฟ้มก่อนแสดงป๊อปอัปผลรางวัล
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
-          }, 1050);
+          }, 3000);
         } else {
-          showBloodBurst();
+          // หากสิทธิ์เต็ม หน่วงเวลา 3 วินาทีเช่นกัน
           setTimeout(() => {
             document.getElementById('popupEmpty').style.display = 'flex';
-          }, 850);
+          }, 3000);
         }
       } catch (err) {
         console.error(err);
