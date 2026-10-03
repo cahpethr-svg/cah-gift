@@ -241,7 +241,7 @@
 
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
-    const lineAccountID = "787nqarq";
+    const lineAccountID = "@787nqarq";
     let isProcessing = false;
 
     // โหมดทดสอบ (ปิดระบบบล็อคเพื่อให้เทสได้เรื่อยๆ)
@@ -386,7 +386,7 @@
 
           // ลิงก์ LINE รูปแบบมาตรฐาน
           const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
-          document.getElementById('lineSendBtn').href = `https://line.me/R/msg/text/?${msg}`;
+          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
