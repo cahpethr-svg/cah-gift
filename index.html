@@ -156,7 +156,6 @@
     }
     .line-claim-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(6, 199, 85, 0.6); }
 
-    /* ปุ่มกลับหน้า Canva */
     .back-canva-btn {
       display: block; background: rgba(255, 255, 255, 0.08); color: #cbd5e1; text-decoration: none; font-size: 12px;
       padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.15); margin-top: 10px; width: 100%;
@@ -243,14 +242,12 @@
         <div class="reward-name" id="prizeDisplay">กำลังค้นหาข้อมูล...</div>
       </div>
       <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นหลักฐานทันที</div>
-      <p>แตะปุ่มด้านล่างเข้าแชต LINE แล้ว<strong>กดปุ่มส่ง (ลูกศรเขียว)</strong> เพื่อยืนยันสิทธิ์ค่ะ</p>
+      <p>แตะปุ่มด้านล่างเข้าแชต LINE แล้ว<strong>กดปุ่มส่ง (ลูกศรเขียว)</strong> เพื่อยืนยันสิทธิ์</p>
       
-      <!-- ปุ่มเปิดแอป LINE -->
       <a href="#" id="lineSendBtn" class="line-claim-btn">
         💬 เปิด LINE แล้วกดส่งข้อความ ↗
       </a>
 
-      <!-- ปุ่มกลับหน้า Canva -->
       <a href="https://hellocharoensuk.my.canva.site" target="_top" class="back-canva-btn">
         🔙 กลับสู่หน้าหลัก Canva
       </a>
@@ -262,9 +259,8 @@
     <div class="empty-card">
       <div class="empty-skull">☠</div>
       <h2 id="emptyTitle">แฟ้มว่างเปล่า...</h2>
-      <p>ผู้รอดชีวิต 10 คนแรกคว้าข้อมูลในแฟ้มไปหมดแล้วค่ะ</p>
+      <p>ผู้รอดชีวิต 10 คนแรกคว้าข้อมูลในแฟ้มไปหมดแล้ว</p>
       
-      <!-- ปุ่มเด้งกลับหน้า Canva เมื่อสิทธิ์เต็ม -->
       <a href="https://hellocharoensuk.my.canva.site" target="_top" class="empty-btn">
         🔙 สิทธิ์เต็มแล้ว — กลับหน้าหลัก Canva
       </a>
@@ -277,11 +273,118 @@
     
     let isProcessing = false;
 
-    // โหมดเทส (กดซ้ำได้เรื่อยๆ)
     function hasPlayed() {
-      return false; 
+      return false; // โหมดเทส
     }
     function setPlayedFlag() {}
+
+    // ==========================================
+    // AUDIO ENGINE รองรับ Mobile Safari / WebKit 100%
+    // ==========================================
+    let audioCtx = null;
+    let ambientDroneGain = null;
+
+    function initAudioEngine() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtx = new AudioContext();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // เสียงลมวิญญาณคลอเบาๆ
+    function startAmbientDrone() {
+      if (!audioCtx || ambientDroneGain) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        ambientDroneGain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(55, audioCtx.currentTime); // โน้ตความถี่ต่ำ A1
+        
+        ambientDroneGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+        ambientDroneGain.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 3);
+        
+        osc.connect(ambientDroneGain);
+        ambientDroneGain.connect(audioCtx.destination);
+        osc.start();
+      } catch (e) {}
+    }
+
+    // เสียงกระชากวิญญาณตอนเปิดแฟ้ม (Boom & Screech ยาว 2.5 วินาที)
+    function playTerrifyingHorrorSound() {
+      initAudioEngine();
+      if (!audioCtx) return;
+
+      try {
+        const now = audioCtx.currentTime;
+
+        // 1. เสียงเบสทุ้มคำรามกระแทกอย่างแรง (Demonic Sub Boom)
+        const subOsc = audioCtx.createOscillator();
+        const subGain = audioCtx.createGain();
+        subOsc.type = 'sawtooth';
+        subOsc.frequency.setValueAtTime(130, now);
+        subOsc.frequency.exponentialRampToValueAtTime(24, now + 2.2);
+        
+        subGain.gain.setValueAtTime(0.65, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.4);
+        
+        subOsc.connect(subGain);
+        subGain.connect(audioCtx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + 2.4);
+
+        // 2. เสียงหวีดแหลมสยองขวัญเสียดแก้วหู (Ghostly Shreik Scrape)
+        const scrape = audioCtx.createOscillator();
+        const scrapeGain = audioCtx.createGain();
+        scrape.type = 'triangle';
+        scrape.frequency.setValueAtTime(450, now);
+        scrape.frequency.linearRampToValueAtTime(1350, now + 0.4);
+        scrape.frequency.exponentialRampToValueAtTime(110, now + 2.0);
+
+        scrapeGain.gain.setValueAtTime(0.35, now);
+        scrapeGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
+
+        scrape.connect(scrapeGain);
+        scrapeGain.connect(audioCtx.destination);
+        scrape.start(now);
+        scrape.stop(now + 2.2);
+
+        // 3. เสียงสั่นประสาทแบบความถี่สูง (Horror Distortion Rattle)
+        const rattle = audioCtx.createOscillator();
+        const rattleGain = audioCtx.createGain();
+        rattle.type = 'square';
+        rattle.frequency.setValueAtTime(80, now + 0.1);
+        rattle.frequency.linearRampToValueAtTime(30, now + 1.5);
+
+        rattleGain.gain.setValueAtTime(0.18, now + 0.1);
+        rattleGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+
+        rattle.connect(rattleGain);
+        rattleGain.connect(audioCtx.destination);
+        rattle.start(now + 0.1);
+        rattle.stop(now + 1.8);
+
+      } catch (err) {
+        console.warn("Audio play issue", err);
+      }
+    }
+
+    // ปลดล็อกระบบเสียงทันทีเมื่อมีการสัมผัสหน้าจอส่วนใดก็ตาม
+    document.addEventListener('touchstart', function unlockAudio() {
+      initAudioEngine();
+      startAmbientDrone();
+      document.removeEventListener('touchstart', unlockAudio);
+    }, { once: true });
+
+    document.addEventListener('click', function unlockAudioClick() {
+      initAudioEngine();
+      startAmbientDrone();
+      document.removeEventListener('click', unlockAudioClick);
+    }, { once: true });
 
     function makeAmbientBlood() {
       const layer = document.getElementById('ambientBlood');
@@ -316,36 +419,6 @@
         drop.style.animationDelay = (Math.random() * .17) + 's';
         layer.appendChild(drop);
       }
-    }
-
-    function playTerrifyingHorrorSound() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const now = ctx.currentTime;
-        const subOsc = ctx.createOscillator();
-        const subGain = ctx.createGain();
-        subOsc.type = 'sawtooth';
-        subOsc.frequency.setValueAtTime(95, now);
-        subOsc.frequency.exponentialRampToValueAtTime(28, now + 1.8);
-        subGain.gain.setValueAtTime(0.25, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
-        subOsc.connect(subGain); subGain.connect(ctx.destination);
-        subOsc.start(now); subOsc.stop(now + 2.0);
-
-        const scrape = ctx.createOscillator();
-        const scrapeGain = ctx.createGain();
-        scrape.type = 'triangle';
-        scrape.frequency.setValueAtTime(580, now);
-        scrape.frequency.linearRampToValueAtTime(1100, now + .4);
-        scrape.frequency.exponentialRampToValueAtTime(140, now + 1.8);
-        scrapeGain.gain.setValueAtTime(0.12, now);
-        scrapeGain.gain.exponentialRampToValueAtTime(0.001, now + 1.9);
-        scrape.connect(scrapeGain); scrapeGain.connect(ctx.destination);
-        scrape.start(now); scrape.stop(now + 1.9);
-        setTimeout(() => ctx.close().catch(() => {}), 2500);
-      } catch (err) {}
     }
 
     function showBloodBurst() {
@@ -387,8 +460,12 @@
     }
 
     async function handleBoxClick() {
+      // ปลุกระบบเสียงทันทีเมื่อเริ่มคลิก
+      initAudioEngine();
+      playTerrifyingHorrorSound();
+
       if (hasPlayed()) {
-        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)');
+        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้ว (จำกัด 1 เครื่อง / 1 สิทธิ์)');
         return;
       }
       if (isProcessing) return;
@@ -405,7 +482,6 @@
       }
       if (scene) scene.classList.add('opening');
       
-      playTerrifyingHorrorSound();
       showBloodBurst();
 
       try {
@@ -417,15 +493,14 @@
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+          const msg = encodeURIComponent(`สวัสดีฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
           document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
-          // หน่วงเวลา 3 วินาทีให้เห็นการเปิดแฟ้มก่อนแสดงป๊อปอัป
+          // หน่วงเวลาครบ 3 วินาที (3,000 มิลลิวินาที) ให้เห็นแอนิเมชันและฟังเสียง
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
           }, 3000);
         } else {
-          // หากสิทธิ์เต็ม หน่วงเวลา 3 วินาทีเช่นกัน
           setTimeout(() => {
             document.getElementById('popupEmpty').style.display = 'flex';
           }, 3000);
