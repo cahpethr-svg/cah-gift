@@ -192,19 +192,6 @@
 </head>
 <body>
 
-  <!-- ========================================================
-       ไฟล์เสียงสยองขวัญแท้ (ไม่มีเสียงเดินป่า ไม่มีเสียงนก)
-       ======================================================== -->
-  <!-- 1. เสียงบรรยากาศ: ดนตรีป่าช้า ลมหนาวหวีดหวิวหลอน (Dark Cemetery Wind Drone) -->
-  <audio id="sndAmbient" loop preload="auto" playsinline>
-    <source src="https://assets.mixkit.co/active_storage/sfx/2873/2873-preview.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- 2. เสียงเปิดแฟ้มได้รางวัล: เสียงกรีดร้องสยองขวัญสุดขีด (Ghostly Jump Scream) -->
-  <audio id="sndScream" preload="auto" playsinline>
-    <source src="https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3" type="audio/mpeg">
-  </audio>
-
   <div class="moon" aria-hidden="true"></div>
   <div id="ambientBlood" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
@@ -292,28 +279,6 @@
     }
     function setPlayedFlag() {}
 
-    // เล่นเสียงบรรยากาศหลอนทันทีเมื่อแตะหน้าจอครั้งแรก
-    function playAmbient() {
-      const amb = document.getElementById('sndAmbient');
-      if (amb && amb.paused) {
-        amb.volume = 0.5;
-        amb.play().catch(() => {});
-      }
-    }
-
-    // เล่นเสียงหวีดร้องสยองขวัญตอนเปิดได้รางวัล
-    function playScreamSound() {
-      const scream = document.getElementById('sndScream');
-      if (scream) {
-        scream.currentTime = 0;
-        scream.volume = 1.0;
-        scream.play().catch(() => {});
-      }
-    }
-
-    document.addEventListener('touchstart', playAmbient, { once: true });
-    document.addEventListener('click', playAmbient, { once: true });
-
     function makeAmbientBlood() {
       const layer = document.getElementById('ambientBlood');
       if (!layer) return;
@@ -388,8 +353,6 @@
     }
 
     async function handleBoxClick() {
-      playAmbient();
-
       if (hasPlayed()) {
         alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)');
         return;
@@ -416,9 +379,6 @@
         const result = await response.json();
 
         if (result.status === 'SUCCESS') {
-          // ยิงเสียงกรีดร้องสยองขวัญทันทีที่สุ่มได้รางวัล!
-          playScreamSound();
-
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
