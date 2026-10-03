@@ -562,7 +562,7 @@
 
     async function handleBoxClick() {
       if (hasPlayed()) {
-        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)');
+        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้ว (จำกัด 1 เครื่อง / 1 สิทธิ์)');
         return;
       }
       if (isProcessing) return;
@@ -589,8 +589,8 @@
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
-          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
+          const msg = encodeURIComponent(`สวัสดี ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
+          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
