@@ -374,7 +374,7 @@
 
     async function handleBoxClick() {
       if (hasPlayed()) {
-        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้วค่ะ (จำกัด 1 เครื่อง / 1 สิทธิ์)');
+        alert('คุณได้เปิดแฟ้มคดีของเครื่องนี้ไปแล้ว (จำกัด 1 เครื่อง / 1 สิทธิ์)');
         return;
       }
       if (isProcessing) return;
@@ -410,7 +410,7 @@
             document.getElementById('innerNote').innerText = '📸 แคปหน้าจอนี้ไว้เป็นหลักฐานยืนยัน';
 
             // ผูกลิงก์ LINE
-            const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
+            const msg = encodeURIComponent(`สวัสดี ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์`);
             document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/@${lineAccountID}/?${msg}`;
 
             // แสดงปุ่มด้านล่าง
@@ -423,7 +423,7 @@
             document.getElementById('stampStatus').innerText = 'EXHAUSTED · สิทธิ์หมดสิ้นแล้ว';
             document.getElementById('prizeTitleLabel').innerText = '💀 แฟ้มว่างเปล่า...';
             document.getElementById('prizeDisplay').innerText = 'ผู้รอดชีวิต 10 คนแรกคว้าไปหมดแล้ว';
-            document.getElementById('innerNote').innerText = 'ขออภัย โควตาเต็มแล้วค่ะ';
+            document.getElementById('innerNote').innerText = 'ขออภัย โควตาเต็มแล้ว';
 
             hint.innerText = '💀 โควตารางวัลถูกใช้งานครบแล้ว';
             document.getElementById('backCanvaBtn').style.display = 'block';
