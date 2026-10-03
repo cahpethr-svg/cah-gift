@@ -148,8 +148,14 @@
     .reward-name { color: #f2e5d9; font-size: 19px; font-weight: 700; overflow-wrap: anywhere; text-shadow: 0 0 14px rgba(255,220,190,.18); }
     .capture-note { color: #d8a29b; background: rgba(126,0,7,.14); border: 1px dashed rgba(175,25,32,.55); padding: 9px 7px; font-size: 11px; margin-bottom: 13px; }
     .popup-card p { color: #a99a92; font-size: 12px; line-height: 1.7; margin-bottom: 17px; }
-    .line-claim-btn { display: block; background: linear-gradient(135deg, #a20b13, #5d0509); color: #fff4ed; text-decoration: none; font-size: 13px; font-weight: 700; padding: 13px 15px; border: 1px solid #c12b30; letter-spacing: .02em; box-shadow: 0 0 20px rgba(150,0,8,.25); transition: transform .2s, box-shadow .2s; }
-    .line-claim-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(220,0,8,.35); }
+    
+    .line-claim-btn {
+      display: block; background: #06c755; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 700;
+      padding: 13px 15px; border-radius: 4px; letter-spacing: .02em; cursor: pointer;
+      box-shadow: 0 0 20px rgba(6, 199, 85, 0.4); transition: transform .2s, box-shadow .2s; border: none; width: 100%;
+    }
+    .line-claim-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(6, 199, 85, 0.6); }
+    
     .empty-card { width: min(100%, 330px); padding: 28px 22px; text-align: center; border: 1px solid #393131; background: #0b0909; box-shadow: 0 0 35px rgba(0,0,0,.8); }
     .empty-skull { font-size: 43px; margin-bottom: 8px; filter: grayscale(.3); }
     .empty-card h2 { color: #bd5558; font-family: 'Eater', 'Nosifer', cursive; font-size: 16px; line-height: 1.9; margin-bottom: 10px; }
@@ -171,7 +177,6 @@
       .eyebrow { margin-bottom: 7px; } .main-title { font-size: 19px; } .subtitle { margin-bottom: 12px; }
       .book-stage { height: 48svh; min-height: 230px; } .status-pill { margin-top: 16px; }
     }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
   </style>
 </head>
 <body>
@@ -225,8 +230,10 @@
         <div class="reward-name" id="prizeDisplay">กำลังค้นหาข้อมูล...</div>
       </div>
       <div class="capture-note">📸 แคปหน้าจอนี้ไว้เป็นหลักฐานทันที</div>
-      <p>คุณค้นพบข้อมูลในแฟ้มคดีแล้ว<br>แตะด้านล่างเพื่อส่งหลักฐานยืนยันเข้า LINE OA CAH</p>
-      <a href="#" id="lineSendBtn" target="_blank" rel="noopener noreferrer" class="line-claim-btn">ส่งข้อความยืนยันรับรางวัล ↗</a>
+      <p>แตะปุ่มด้านล่าง ระบบจะคัดลอกข้อความและเปิด LINE OA CAH ให้ทันทีค่ะ</p>
+      <button id="lineSendBtn" class="line-claim-btn" onclick="sendToLineOA()">
+        💬 ส่งข้อความยืนยันรับรางวัลใน LINE ↗
+      </button>
     </div>
   </div>
 
@@ -241,10 +248,14 @@
 
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwixVC8r8-ihKMQt5IDSCRTEc2pFmPFxIKs6hLVJG5ite84J03DDRk1eC2QC7cO76WL/exec";
-    const lineAccountID = "@787nqarq";
+    
+    // ไอดี LINE OA ที่ถูกต้องตามที่แจ้งมา
+    const lineAccountID = "787nqarq"; 
+    
     let isProcessing = false;
+    let claimTextToCopy = "";
 
-    // โหมดทดสอบ (ปิดระบบบล็อคเพื่อให้เทสได้เรื่อยๆ)
+    // ปิดระบบจำกัดสิทธิ์ชั่วคราวเพื่อเทสระบบ
     function hasPlayed() {
       return false; 
     }
@@ -312,7 +323,7 @@
         scrape.connect(scrapeGain); scrapeGain.connect(ctx.destination);
         scrape.start(now); scrape.stop(now + 1.02);
         setTimeout(() => ctx.close().catch(() => {}), 1500);
-      } catch (err) { }
+      } catch (err) {}
     }
 
     function showBloodBurst() {
@@ -329,6 +340,16 @@
         layer.classList.add('active');
         setTimeout(() => layer.classList.remove('active'), 1900);
       }
+    }
+
+    // ฟังก์ชันส่งไป LINE OA (เปิดหน้าโปรไฟล์/แชตแน่นอน 100% ไม่ติด Bad Request)
+    function sendToLineOA() {
+      if (navigator.clipboard && claimTextToCopy) {
+        navigator.clipboard.writeText(claimTextToCopy).catch(() => {});
+      }
+      
+      // ลิงก์มาตรฐานของ LINE OA ที่ค้นหาพบแน่นอน ไม่ขึ้น Bad Request
+      window.location.href = `https://line.me/R/ti/p/@${lineAccountID}`;
     }
 
     window.addEventListener('load', () => {
@@ -384,9 +405,8 @@
           setPlayedFlag();
           document.getElementById('prizeDisplay').innerText = result.prize;
 
-          // ลิงก์ LINE รูปแบบมาตรฐาน
-          const msg = encodeURIComponent(`สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`);
-          document.getElementById('lineSendBtn').href = `https://line.me/R/oaMessage/%40${lineAccountID}/?${msg}`;
+          // ข้อความที่จะคัดลอกให้อัตโนมัติ
+          claimTextToCopy = `สวัสดีค่ะ/ครับ ฉันเปิดแฟ้มได้รางวัล "${result.prize}" (เวลา ${result.time}) ขอรับสิทธิ์ค่ะ/ครับ`;
 
           setTimeout(() => {
             document.getElementById('popupSuccess').style.display = 'flex';
