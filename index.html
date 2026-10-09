@@ -346,12 +346,20 @@
       if (prizeText.includes("บลูเบอร์รี่ชีสเค้ก")) return "blueberry_cheesecake.jpg";
       return "pie_set.jpg";
     }
-
-    function hasPlayed() {
-      return false; // โหมดเทส
+function hasPlayed() {
+      try { 
+        // เช็คว่าในเครื่องนี้เคยเล่นหรือยัง
+        return localStorage.getItem("cahOutingPlayed") === "true"; 
+      }
+      catch (e) { return false; }
     }
-    function setPlayedFlag() {}
-
+    
+    function setPlayedFlag() {
+      try {
+        // บันทึกสถานะลงเครื่องทันทีที่สุ่มรางวัลได้
+        localStorage.setItem("cahOutingPlayed", "true");
+      } catch (e) { console.error("ไม่สามารถบันทึกสถานะลง localStorage ได้", e); }
+    }
     function makeAmbientBlood() {
       const layer = document.getElementById('ambientBlood');
       if (!layer) return;
