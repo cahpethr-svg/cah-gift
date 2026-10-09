@@ -100,24 +100,32 @@
       line-height: 1.3;
     }
 
-    /* รูปภาพขนมบนหน้ากระดาษ */
+   /* =========================================
+       กรอบรูปขนม (ปรับให้เห็นภาพเต็มใบไม่โดนตัด)
+       ========================================= */
     .inner-prize-img-wrap {
-      width: 100%;
-      max-width: 130px;
-      height: 90px;
-      border: 2px solid #6b1414;
-      border-radius: 6px;
+      width: 88%;
+      max-width: 170px;
+      aspect-ratio: 1 / 1; /* แสดงเป็นสัดส่วนจัตุรัสตามรูปต้นฉบับ */
+      height: auto;
+      max-height: 125px;
+      border: 2px solid #8b1111;
+      border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 6px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-      background: #110808;
+      margin: 4px 0 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 15px rgba(180,0,10,0.45);
+      background: #000;
       display: none;
+      animation: snackBouncing 2.6s ease-in-out infinite;
+      transform-origin: center bottom;
     }
+
     .inner-prize-img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* โชว์ครบทั้งภาพ ตัวหนังสือในภาพไม่โดนตัด */
       display: block;
+      background-color: #0b0706;
     }
 
     .inner-prize-title {
@@ -125,27 +133,26 @@
       color: #523120;
       font-weight: 700;
       letter-spacing: .05em;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .inner-prize-name {
-      font-size: clamp(13px, 3.8vw, 15px);
+      font-size: clamp(12px, 3.4vw, 14px); /* ย่อขนาดตัวอักษรลงเล็กน้อยให้พอดีกรอบ */
       font-weight: 900;
       color: #a0000a;
-      line-height: 1.3;
+      line-height: 1.35;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-      padding: 4px;
+      padding: 3px 2px;
       border-top: 1.5px solid rgba(130, 20, 20, 0.4);
       border-bottom: 1.5px solid rgba(130, 20, 20, 0.4);
       width: 100%;
       word-break: break-word;
     }
     .inner-note {
-      font-size: 9px;
+      font-size: 8.5px;
       color: #634331;
-      margin-top: 6px;
+      margin-top: 4px;
       font-family: 'Special Elite', monospace;
     }
-
     /* ปกหน้าแฟ้ม 27 */
     .book-cover {
       position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d;
